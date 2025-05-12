@@ -4,6 +4,7 @@ import { useEffect, useCallback, useMemo } from "react";
 import {
   useEditor,
   EditorContent,
+  BubbleMenu,
   Editor as TiptapEditorType,
   JSONContent,
 } from "@tiptap/react";
@@ -15,7 +16,12 @@ import { Extension } from "@tiptap/core";
 import { Block, BlockType } from "@/types";
 import { useApp } from "@/lib/context/app-context";
 import { cn } from "@/lib/utils";
-import { TiptapVeltComments } from "@veltdev/tiptap-velt-comments";
+import {
+  highlightComments,
+  TiptapVeltComments,
+  triggerAddComment,
+} from "@veltdev/tiptap-velt-comments";
+import { useCommentAnnotations } from "@veltdev/react";
 
 interface TipTapEditorProps {
   block: Block;
@@ -122,6 +128,7 @@ export function TipTapEditor({
         },
       };
 
+      // Apply specific configurations based on block type
       switch (blockType) {
         case BlockType.HEADING_1:
           return {
@@ -215,6 +222,21 @@ export function TipTapEditor({
     }
   }, [block.type, block.checked]);
 
+  const tiptapVeltCommentConfig = {
+    context: {
+      storyId: "story-id",
+      storyName: "story-name",
+    },
+  };
+
+  const commentAnnotations = useCommentAnnotations();
+
+  useEffect(() => {
+    if (editor && commentAnnotations?.length) {
+      highlightComments(editor, commentAnnotations);
+    }
+  }, [editor, commentAnnotations]);
+
   // Special case for number lists to show the index
   const renderPrefix = useCallback(() => {
     if (block.type === BlockType.NUMBERED_LIST) {
@@ -243,6 +265,24 @@ export function TipTapEditor({
       data-block-type={block.type}
       onClick={onFocus}
     >
+      {/* BubbleMenu for comment button */}
+      {editor && (
+        <BubbleMenu
+          editor={editor}
+          tippyOptions={{ duration: 100 }}
+          className="bg-white border border-gray-200 rounded shadow-md p-1 flex gap-1"
+        >
+          <button
+            onClick={() => {
+              triggerAddComment(editor, tiptapVeltCommentConfig);
+            }}
+            className="px-2 py-1 text-sm bg-blue-500 text-white rounded hover:bg-blue-600"
+            title="Add comment"
+          >
+            Comment
+          </button>
+        </BubbleMenu>
+      )}
       <div
         className={cn("flex", block.type === BlockType.TO_DO && "items-start")}
       >
