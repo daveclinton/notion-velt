@@ -29,6 +29,7 @@ interface TipTapEditorProps {
 interface EditorConfig {
   extensions: any[];
   content: string | JSONContent;
+  immediatelyRender: boolean;
   editorProps: {
     attributes: {
       class: string;
@@ -109,6 +110,7 @@ export function TipTapEditor({
             onBackspace,
           }),
         ],
+        immediatelyRender: false,
         content: block.content || "",
         editorProps: {
           attributes: {
