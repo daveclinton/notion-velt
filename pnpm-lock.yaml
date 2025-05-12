@@ -50,6 +50,12 @@ importers:
       '@tiptap/starter-kit':
         specifier: ^2.12.0
         version: 2.12.0
+      '@veltdev/react':
+        specifier: 4.4.0-beta.12
+        version: 4.4.0-beta.12(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+      '@veltdev/tiptap-velt-comments':
+        specifier: ^4.2.0
+        version: 4.2.0(@tiptap/core@2.12.0(@tiptap/pm@2.12.0))
       class-variance-authority:
         specifier: ^0.7.1
         version: 0.7.1
@@ -1166,6 +1172,17 @@ packages:
     resolution: {integrity: sha512-friS8NEQfHaDbkThxopGk+LuE5v3iY0StruifjQEt7SLbA46OnfgMO15sOTkbpJkol6RB+1l1TYPXh0sCddpvA==}
     cpu: [x64]
     os: [win32]
+
+  '@veltdev/react@4.4.0-beta.12':
+    resolution: {integrity: sha512-sjcq4yQHvf2E4OWe+1JDCJOdGbB6mfwiIfg0d/dMJrj8AAOMHNBVbsmCczIYG4N2xizlfMtIuSGHm4bhuQoiXg==}
+    peerDependencies:
+      react: ^19.0.0 || ^18.0.0 || ^17.0.0 || ^16.0.0
+      react-dom: ^19.0.0 || ^18.0.0 || ^17.0.0 || ^16.0.0
+
+  '@veltdev/tiptap-velt-comments@4.2.0':
+    resolution: {integrity: sha512-BoANvXJfeFhgvJYSsUoO/4p/BZ6oI2hQqUX4IlZSh+C+m++dyAbPBSWIx6uOH3C/FYxM2gpp5pFSkrkFzOXjhQ==}
+    peerDependencies:
+      '@tiptap/core': ^2.x.x
 
   accepts@2.0.0:
     resolution: {integrity: sha512-5cvg6CtKwfgdmVqY1WIiXKc3Q1bkRqGLi+2W/6ao+6Y7gu/RCwRuAhGEzh5B4KlszSuTLgZYuqFqo5bImjNKng==}
@@ -3703,6 +3720,15 @@ snapshots:
 
   '@unrs/resolver-binding-win32-x64-msvc@1.7.2':
     optional: true
+
+  '@veltdev/react@4.4.0-beta.12(react-dom@19.1.0(react@19.1.0))(react@19.1.0)':
+    dependencies:
+      react: 19.1.0
+      react-dom: 19.1.0(react@19.1.0)
+
+  '@veltdev/tiptap-velt-comments@4.2.0(@tiptap/core@2.12.0(@tiptap/pm@2.12.0))':
+    dependencies:
+      '@tiptap/core': 2.12.0(@tiptap/pm@2.12.0)
 
   accepts@2.0.0:
     dependencies:

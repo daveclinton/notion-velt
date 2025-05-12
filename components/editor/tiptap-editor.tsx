@@ -15,6 +15,7 @@ import { Extension } from "@tiptap/core";
 import { Block, BlockType } from "@/types";
 import { useApp } from "@/lib/context/app-context";
 import { cn } from "@/lib/utils";
+import { TiptapVeltComments } from "@veltdev/tiptap-velt-comments";
 
 interface TipTapEditorProps {
   block: Block;
@@ -83,6 +84,7 @@ export function TipTapEditor({
     (blockType: BlockType): EditorConfig => {
       const baseConfig: EditorConfig = {
         extensions: [
+          TiptapVeltComments,
           StarterKit.configure({
             heading: {
               levels: [1, 2, 3],

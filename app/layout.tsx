@@ -4,6 +4,7 @@ import "./globals.css";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/app-sidebar";
 import { AppProvider } from "@/lib/context/app-context";
+import { VeltWrapper } from "@/lib/context/velt-wrapper";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -30,18 +31,21 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <AppProvider>
-          <SidebarProvider>
-            <AppSidebar variant="inset" />
-            <SidebarInset>
-              <div className="flex flex-1 flex-col">
-                <div className="@container/main flex flex-1 flex-col gap-2">
-                  {children}
+        <VeltWrapper>
+          <AppProvider>
+            <SidebarProvider>
+              <AppSidebar variant="inset" />
+              <SidebarInset>
+                emploi{" "}
+                <div className="flex flex-1 flex-col">
+                  <div className="@container/main flex flex-1 flex-col gap-2">
+                    {children}
+                  </div>
                 </div>
-              </div>
-            </SidebarInset>
-          </SidebarProvider>
-        </AppProvider>
+              </SidebarInset>
+            </SidebarProvider>
+          </AppProvider>
+        </VeltWrapper>
       </body>
     </html>
   );

@@ -63,8 +63,6 @@ export function AppProvider({ children }: { children: ReactNode }) {
 
   const getCurrentPage = () => {
     if (!currentPageId) return null;
-
-    // Search for the page in the page tree
     return findPageById(currentPageId, pages);
   };
 
