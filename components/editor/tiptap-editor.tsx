@@ -89,9 +89,6 @@ export function TipTapEditor({
             heading: {
               levels: [1, 2, 3],
             },
-            // bulletList: blockType === BlockType.BULLET_LIST,
-            // orderedList: blockType === BlockType.NUMBERED_LIST,
-            // codeBlock: blockType === BlockType.CODE,
           }),
           Placeholder.configure({
             placeholder: "Type here...",
@@ -125,7 +122,6 @@ export function TipTapEditor({
         },
       };
 
-      // Apply specific configurations based on block type
       switch (blockType) {
         case BlockType.HEADING_1:
           return {
