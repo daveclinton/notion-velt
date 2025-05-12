@@ -36,7 +36,6 @@ export default function RootLayout({
             <SidebarProvider>
               <AppSidebar variant="inset" />
               <SidebarInset>
-                emploi{" "}
                 <div className="flex flex-1 flex-col">
                   <div className="@container/main flex flex-1 flex-col gap-2">
                     {children}
