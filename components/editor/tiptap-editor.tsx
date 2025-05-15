@@ -15,7 +15,6 @@ import TaskList from "@tiptap/extension-task-list";
 import TaskItem from "@tiptap/extension-task-item";
 import { Extension } from "@tiptap/core";
 import { Block, BlockType } from "@/types";
-import { useApp } from "@/lib/context/app-context";
 import { cn } from "@/lib/utils";
 import {
   highlightComments,
@@ -32,6 +31,7 @@ interface TipTapEditorProps {
   onEnter: () => void;
   onBackspace: () => void;
   index?: number;
+  updateBlock: (blockId: string, updates: Partial<Block>) => void;
 }
 
 interface EditorConfig {
@@ -101,9 +101,8 @@ export function TipTapEditor({
   onEnter,
   onBackspace,
   index = 0,
+  updateBlock,
 }: TipTapEditorProps) {
-  const { updateBlock } = useApp();
-
   const tiptapVeltCommentConfig = {
     context: {
       pageId: pageId,
@@ -147,12 +146,12 @@ export function TipTapEditor({
         content: block.content || "",
         editorProps: {
           attributes: {
-            class: "outline-none min-h-[1.5em] text-gray-200 bg-gray-900",
+            class: "outline-none min-h-[1.5em] text-gray-200",
           },
         },
         onUpdate: ({ editor }: { editor: TiptapEditorType }) => {
           const content = editor.getHTML();
-          updateBlock(pageId, block.id, { content });
+          updateBlock(block.id, { content });
         },
       };
 
@@ -259,7 +258,7 @@ export function TipTapEditor({
       case BlockType.HEADING_3:
         return "text-lg font-bold text-gray-100";
       case BlockType.CODE:
-        return "bg-gray-800 rounded p-2 font-mono text-sm text-gray-200 whitespace-pre-wrap";
+        return "rounded p-2 font-mono text-sm text-gray-200 whitespace-pre-wrap";
       case BlockType.TO_DO:
         return block.checked ? "line-through text-gray-500" : "text-gray-200";
       default:
@@ -281,11 +280,10 @@ export function TipTapEditor({
   }, [block.type, index]);
 
   if (!editor) {
-    // Updated: Skeleton loader instead of "Loading editor..."
     return (
       <div
         className={cn(
-          "p-1 my-1 rounded bg-gray-800/50 animate-pulse", // Dark-themed skeleton container
+          "p-1 my-1 rounded animate-pulse",
           block.type === BlockType.HEADING_1 && "h-10",
           block.type === BlockType.HEADING_2 && "h-8",
           block.type === BlockType.HEADING_3 && "h-6",
@@ -294,17 +292,15 @@ export function TipTapEditor({
             block.type === BlockType.NUMBERED_LIST) &&
             "h-6",
           block.type === BlockType.TO_DO && "h-6",
-          block.type === BlockType.PARAGRAPH && "h-6" // Default paragraph
+          block.type === BlockType.PARAGRAPH && "h-6"
         )}
       >
         <div className="flex">
           {(block.type === BlockType.NUMBERED_LIST ||
             block.type === BlockType.BULLET_LIST) && (
-            // Prefix placeholder for lists
-            <div className="mr-2 w-4 h-4 bg-gray-700 rounded-full" />
+            <div className="mr-2 w-4 h-4 rounded-full" />
           )}
-          {/* Main content placeholder */}
-          <div className="flex-1 bg-gray-700 rounded h-4" />
+          <div className="flex-1 rounded h-4" />
         </div>
       </div>
     );
@@ -312,10 +308,7 @@ export function TipTapEditor({
 
   return (
     <div
-      className={cn(
-        "p-1 my-1 rounded hover:bg-gray-800/50 transition-colors",
-        isFocused && "bg-gray-800/80"
-      )}
+      className={cn("p-1 my-1 rounded transition-colors", isFocused && "")}
       data-block-id={block.id}
       data-block-type={block.type}
       onClick={onFocus}
@@ -324,7 +317,7 @@ export function TipTapEditor({
         <BubbleMenu
           editor={editor}
           tippyOptions={{ duration: 100 }}
-          className="bg-gray-900 border border-gray-700 rounded shadow-md p-1 flex gap-1"
+          className="border rounded shadow-md p-1 flex gap-1"
         >
           <button
             onClick={() => {
@@ -336,8 +329,8 @@ export function TipTapEditor({
             className={cn(
               "px-2 py-1 text-sm rounded",
               editor.state.selection.empty
-                ? "bg-gray-700 text-gray-400 cursor-not-allowed"
-                : "bg-blue-600 text-white hover:bg-blue-700"
+                ? "text-gray-400 cursor-not-allowed"
+                : "text-white hover:"
             )}
             title="Add comment"
           >
