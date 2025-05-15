@@ -100,14 +100,12 @@ export function Editor({
           <EditorToolbar
             onBlockTypeChange={(type) => {
               if (currentPageId && focusedBlockId) {
-                // Find the block
                 const blockIndex = blocks.findIndex(
                   (b) => b.id === focusedBlockId
                 );
                 if (blockIndex >= 0) {
                   const currentBlock = blocks[blockIndex];
                   deleteBlock(currentPageId, focusedBlockId);
-
                   const newBlock: Block = {
                     id: `block-${Date.now()}-${Math.floor(
                       Math.random() * 1000
@@ -116,7 +114,6 @@ export function Editor({
                     content: currentBlock.content,
                     ...(type === BlockType.TO_DO ? { checked: false } : {}),
                   };
-
                   addBlock(currentPageId, newBlock);
                   setFocusedBlockId(newBlock.id);
                 }
