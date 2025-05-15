@@ -6,7 +6,7 @@ import { TipTapEditor } from "./tiptap-editor";
 import { EditorToolbar } from "./editor-toolbar";
 import { Skeleton } from "@/components/ui/skeleton";
 import { PageHeader } from "./page-header";
-import { SidebarTrigger } from "../ui/sidebar";
+import { VeltSidebarButton } from "@veltdev/react";
 
 export function Editor({
   currentPageId,
@@ -15,7 +15,6 @@ export function Editor({
   currentPageId: string;
   currentPage: PageTreeType;
 }) {
-  // Initialize blocks state with data from pageBlocks
   const [blocks, setBlocks] = useState<Block[]>(
     pageBlocks[currentPageId] || []
   );
@@ -76,8 +75,12 @@ export function Editor({
   };
 
   return (
-    <div className="flex-1 p-6 overflow-auto bg-accent">
-      <SidebarTrigger className="-ml-1" />
+    <div className="flex-1 p-6 overflow-auto bg-accent relative">
+      <div className="absolute top-6 right-6 -mr-1">
+        <div className="toolbar">
+          <VeltSidebarButton />
+        </div>
+      </div>
       <div className="max-w-3xl mx-auto">
         <PageHeader page={currentPage} />
         {blocks.map((block, index) => (
