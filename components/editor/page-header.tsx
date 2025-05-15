@@ -36,7 +36,6 @@ export function PageHeader({ page }: PageHeaderProps) {
   const [currentUser, setCurrentUser] = useState(dummyUsers[0]);
   const titleInputRef = useRef<HTMLInputElement>(null);
 
-  // Velt user identification
   useIdentify(
     {
       userId: currentUser.id,
@@ -50,13 +49,11 @@ export function PageHeader({ page }: PageHeaderProps) {
     { forceReset: true }
   );
 
-  // Generate hyphenated document ID from title
   const documentId = title
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/^-|-$/g, "");
 
-  // Velt document setup
   useSetDocument(documentId, { documentName: title });
 
   useEffect(() => {
@@ -92,7 +89,6 @@ export function PageHeader({ page }: PageHeaderProps) {
     }
   };
 
-  // Toggle between dummy users
   const switchUser = () => {
     setCurrentUser((prev) =>
       prev.id === dummyUsers[0].id ? dummyUsers[1] : dummyUsers[0]
@@ -124,7 +120,6 @@ export function PageHeader({ page }: PageHeaderProps) {
         </div>
 
         <div className="flex items-center space-x-2">
-          {/* Display current user */}
           <div className="relative">
             <Avatar className="h-8 w-8 border-2 border-white">
               <AvatarImage src={currentUser.avatar} />
@@ -134,7 +129,6 @@ export function PageHeader({ page }: PageHeaderProps) {
             </Avatar>
             <div className="absolute -bottom-1 -right-1 h-3 w-3 rounded-full bg-green-500 border-2 border-white" />
           </div>
-          {/* Switch user button */}
           <button
             onClick={switchUser}
             className="text-sm text-gray-500 hover:text-gray-700"
