@@ -1,7 +1,7 @@
 "use client";
 
 import React, { createContext, useContext, useState, ReactNode } from "react";
-import { Page, Block } from "@/types";
+import { PageTreeType, Block } from "@/types";
 import { pageTree, pageBlocks } from "../mock-data";
 
 // Define types
@@ -11,7 +11,7 @@ interface SidebarState {
 }
 
 interface AppContextType {
-  pages: Page[];
+  pages: PageTreeType[];
   blocks: Record<string, Block[]>;
   expandedPageIds: Set<string>;
   isPageExpanded: (id: string) => boolean;
@@ -24,7 +24,7 @@ interface AppContextType {
   ) => void;
   addBlock: (pageId: string, block: Block) => void;
   deleteBlock: (pageId: string, blockId: string) => void;
-  createPage: (title: string, parentId: string | null) => Page;
+  createPage: (title: string, parentId: string | null) => PageTreeType;
   deletePage: (id: string) => void;
   updatePageTitle: (id: string, title: string) => void;
   sidebar: SidebarState;
@@ -39,14 +39,14 @@ interface AppProviderProps {
 
 export function AppProvider({ children }: AppProviderProps) {
   // State
-  const [pages, setPages] = useState<Page[]>(pageTree);
+  const [pages, setPages] = useState<PageTreeType[]>(pageTree);
   const [blocks, setBlocks] = useState<Record<string, Block[]>>(pageBlocks);
   const [expandedPageIds, setExpandedPageIds] = useState<Set<string>>(
     new Set(["page-1", "page-3", "page-5"])
   );
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
-  // Page expansion handlers
+  // PageTreeType expansion handlers
   const isPageExpanded = (id: string) => expandedPageIds.has(id);
 
   const togglePageExpanded = (id: string) => {
@@ -91,12 +91,12 @@ export function AppProvider({ children }: AppProviderProps) {
     }));
   };
 
-  // Page tree helpers
+  // PageTreeType tree helpers
   const updatePageInTree = (
-    pages: Page[],
+    pages: PageTreeType[],
     id: string,
-    updateFn: (page: Page) => Page
-  ): Page[] => {
+    updateFn: (page: PageTreeType) => PageTreeType
+  ): PageTreeType[] => {
     return pages.map((page) => {
       if (page.id === id) return updateFn(page);
       if (page.children.length) {
@@ -109,7 +109,10 @@ export function AppProvider({ children }: AppProviderProps) {
     });
   };
 
-  const deletePageFromTree = (pages: Page[], id: string): Page[] => {
+  const deletePageFromTree = (
+    pages: PageTreeType[],
+    id: string
+  ): PageTreeType[] => {
     return pages.filter((page) => {
       if (page.id === id) return false;
       if (page.children.length) {
@@ -119,9 +122,9 @@ export function AppProvider({ children }: AppProviderProps) {
     });
   };
 
-  // Page handlers
+  // PageTreeType handlers
   const createPage = (title: string, parentId: string | null) => {
-    const newPage: Page = {
+    const newPage: PageTreeType = {
       id: `page-${Date.now()}`,
       title,
       parentId,
