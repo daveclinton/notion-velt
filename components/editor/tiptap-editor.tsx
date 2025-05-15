@@ -1,6 +1,7 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
-import { useEffect, useCallback, useMemo } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import {
   useEditor,
   EditorContent,
@@ -75,6 +76,23 @@ const CustomKeyboardShortcuts = ({
   });
 };
 
+const CommentShortcut = Extension.create({
+  name: "commentShortcut",
+  addOptions() {
+    return {
+      config: {},
+    };
+  },
+  addKeyboardShortcuts() {
+    return {
+      "Mod-Shift-c": () => {
+        triggerAddComment(this.editor, this.options.config);
+        return true;
+      },
+    };
+  },
+});
+
 export function TipTapEditor({
   block,
   pageId,
@@ -85,6 +103,13 @@ export function TipTapEditor({
   index = 0,
 }: TipTapEditorProps) {
   const { updateBlock } = useApp();
+
+  const tiptapVeltCommentConfig = {
+    context: {
+      pageId: pageId,
+      blockId: block.id,
+    },
+  };
 
   const getEditorConfig = useCallback(
     (blockType: BlockType): EditorConfig => {
@@ -114,6 +139,9 @@ export function TipTapEditor({
             onEnter,
             onBackspace,
           }),
+          CommentShortcut.configure({
+            config: tiptapVeltCommentConfig, // Now accessible
+          }),
         ],
         immediatelyRender: false,
         content: block.content || "",
@@ -128,23 +156,13 @@ export function TipTapEditor({
         },
       };
 
-      // Apply specific configurations based on block type
       switch (blockType) {
         case BlockType.HEADING_1:
-          return {
-            ...baseConfig,
-            content: `<h1>${block.content || ""}</h1>`,
-          };
+          return { ...baseConfig, content: `<h1>${block.content || ""}</h1>` };
         case BlockType.HEADING_2:
-          return {
-            ...baseConfig,
-            content: `<h2>${block.content || ""}</h2>`,
-          };
+          return { ...baseConfig, content: `<h2>${block.content || ""}</h2>` };
         case BlockType.HEADING_3:
-          return {
-            ...baseConfig,
-            content: `<h3>${block.content || ""}</h3>`,
-          };
+          return { ...baseConfig, content: `<h3>${block.content || ""}</h3>` };
         case BlockType.BULLET_LIST:
           return {
             ...baseConfig,
@@ -171,7 +189,15 @@ export function TipTapEditor({
           return baseConfig;
       }
     },
-    [onEnter, onBackspace, block.content, block.id, pageId, updateBlock]
+    [
+      onEnter,
+      onBackspace,
+      tiptapVeltCommentConfig,
+      block.content,
+      block.id,
+      updateBlock,
+      pageId,
+    ]
   );
 
   const editorConfig = useMemo(
@@ -179,15 +205,15 @@ export function TipTapEditor({
     [block.type, getEditorConfig]
   );
   const editor = useEditor(editorConfig, [block.id]);
+  const [hasComments, setHasComments] = useState(false);
+  const commentAnnotations = useCommentAnnotations();
 
-  // Handle focus/blur
   useEffect(() => {
     if (isFocused && editor && !editor.isFocused) {
       editor.commands.focus("end");
     }
   }, [isFocused, editor]);
 
-  // Update content when it changes externally
   useEffect(() => {
     if (editor && !editor.isFocused && block.content !== undefined) {
       const currentContent = editor.getHTML();
@@ -197,14 +223,33 @@ export function TipTapEditor({
     }
   }, [block.content, editor]);
 
-  // Cleanup editor on unmount
   useEffect(() => {
     return () => {
       editor?.destroy();
     };
   }, [editor]);
 
-  // Apply styles based on block type
+  useEffect(() => {
+    if (editor && commentAnnotations?.length) {
+      highlightComments(editor, commentAnnotations);
+    }
+  }, [editor, commentAnnotations]);
+
+  useEffect(() => {
+    if (editor) {
+      const checkComments = () => {
+        const editorDom = editor.view.dom;
+        const hasComments = editorDom.querySelector(".velt-comment") !== null;
+        setHasComments(hasComments);
+      };
+      checkComments();
+      editor.on("update", checkComments);
+      return () => {
+        editor.off("update", checkComments);
+      };
+    }
+  }, [editor, commentAnnotations]);
+
   const getBlockClassName = useCallback((): string => {
     switch (block.type) {
       case BlockType.HEADING_1:
@@ -222,22 +267,6 @@ export function TipTapEditor({
     }
   }, [block.type, block.checked]);
 
-  const tiptapVeltCommentConfig = {
-    context: {
-      storyId: "story-id",
-      storyName: "story-name",
-    },
-  };
-
-  const commentAnnotations = useCommentAnnotations();
-
-  useEffect(() => {
-    if (editor && commentAnnotations?.length) {
-      highlightComments(editor, commentAnnotations);
-    }
-  }, [editor, commentAnnotations]);
-
-  // Special case for number lists to show the index
   const renderPrefix = useCallback(() => {
     if (block.type === BlockType.NUMBERED_LIST) {
       return (
@@ -265,7 +294,6 @@ export function TipTapEditor({
       data-block-type={block.type}
       onClick={onFocus}
     >
-      {/* BubbleMenu for comment button */}
       {editor && (
         <BubbleMenu
           editor={editor}
@@ -274,9 +302,17 @@ export function TipTapEditor({
         >
           <button
             onClick={() => {
-              triggerAddComment(editor, tiptapVeltCommentConfig);
+              if (!editor.state.selection.empty) {
+                triggerAddComment(editor, tiptapVeltCommentConfig);
+              }
             }}
-            className="px-2 py-1 text-sm bg-blue-500 text-white rounded hover:bg-blue-600"
+            disabled={editor.state.selection.empty}
+            className={cn(
+              "px-2 py-1 text-sm rounded",
+              editor.state.selection.empty
+                ? "bg-gray-300 text-gray-500 cursor-not-allowed"
+                : "bg-blue-500 text-white hover:bg-blue-600"
+            )}
             title="Add comment"
           >
             Comment
@@ -286,6 +322,7 @@ export function TipTapEditor({
       <div
         className={cn("flex", block.type === BlockType.TO_DO && "items-start")}
       >
+        {hasComments && <span className="mr-2 text-blue-500">💬</span>}
         {renderPrefix()}
         <div className={cn("flex-1", getBlockClassName())}>
           <EditorContent editor={editor} />
