@@ -20,7 +20,7 @@ export function Editor({
 
   const blocks = getCurrentPageBlocks();
 
-  if (!currentPageId || currentPage) {
+  if (!currentPageId || !currentPage) {
     return (
       <div className="flex-1 p-6 overflow-auto">
         <div className="max-w-3xl mx-auto">
