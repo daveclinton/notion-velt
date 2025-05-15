@@ -4,7 +4,7 @@ import { VeltProvider, VeltComments } from "@veltdev/react";
 
 export function VeltWrapper({ children }: { children: ReactNode }) {
   return (
-    <VeltProvider apiKey="Mmgfd08nQbBbVR7XhO6o">
+    <VeltProvider apiKey="hnbXx3OVUnYwsPsmATqe">
       <VeltComments textMode={false} />
       {children}
     </VeltProvider>
