@@ -19,29 +19,53 @@ export const dummyUsers: DummyUser[] = [
     color: "#33B5FF",
     textColor: "#FFFFFF",
   },
+  {
+    id: "user3",
+    name: "Charlie Rose",
+    avatar: "https://i.pravatar.cc/150?img=3",
+    email: "charlie@startup.io",
+    organizationId: "org456",
+    color: "#22C55E",
+    textColor: "#000000",
+  },
+  {
+    id: "user4",
+    name: "Diana Lopez",
+    avatar: "https://i.pravatar.cc/150?img=4",
+    email: "diana@freelance.me",
+    organizationId: "org789",
+    color: "#8B5CF6",
+    textColor: "#FFFFFF",
+  },
 ];
 
 export const pageTree: Page[] = [
   {
     id: "page-1",
-    title: "Getting Started",
-    emoji: "👋",
+    title: "Onboarding Guide",
+    emoji: "🚀",
     parentId: null,
     children: [
       {
         id: "page-2",
-        title: "What is Notion?",
+        title: "Company Overview",
         parentId: "page-1",
         children: [],
       },
       {
         id: "page-3",
-        title: "How to use this template",
+        title: "Tech Stack Breakdown",
         parentId: "page-1",
         children: [
           {
             id: "page-4",
-            title: "Creating your first page",
+            title: "Frontend Setup",
+            parentId: "page-3",
+            children: [],
+          },
+          {
+            id: "page-9",
+            title: "Backend APIs",
             parentId: "page-3",
             children: [],
           },
@@ -51,19 +75,19 @@ export const pageTree: Page[] = [
   },
   {
     id: "page-5",
-    title: "Projects",
-    emoji: "📚",
+    title: "Random Ideas Dump",
+    emoji: "🧠",
     parentId: null,
     children: [
       {
         id: "page-6",
-        title: "Project A",
+        title: "Feature Requests",
         parentId: "page-5",
         children: [],
       },
       {
         id: "page-7",
-        title: "Project B",
+        title: "UI Experiments",
         parentId: "page-5",
         children: [],
       },
@@ -72,7 +96,14 @@ export const pageTree: Page[] = [
   {
     id: "page-8",
     title: "Meeting Notes",
-    emoji: "📝",
+    emoji: "📓",
+    parentId: null,
+    children: [],
+  },
+  {
+    id: "page-10",
+    title: "2025 Roadmap",
+    emoji: "📅",
     parentId: null,
     children: [],
   },
@@ -83,83 +114,131 @@ export const pageBlocks: Record<string, Block[]> = {
     {
       id: "block-1-1",
       type: BlockType.HEADING_1,
-      content: "Getting Started",
+      content: "Welcome to the Team!",
     },
     {
       id: "block-1-2",
       type: BlockType.PARAGRAPH,
       content:
-        "Welcome to your new Notion workspace! Here are some tips to help you get started.",
+        "We're excited to have you on board. Here's everything you need to get started fast.",
     },
     {
       id: "block-1-3",
-      type: BlockType.HEADING_2,
-      content: "What is Notion?",
-    },
-    {
-      id: "block-1-4",
-      type: BlockType.PARAGRAPH,
-      content:
-        "Notion is an all-in-one workspace for notes, tasks, wikis, and databases.",
+      type: BlockType.QOUTE,
+      content: "Move fast, but don't break the build.",
     },
   ],
   "page-2": [
     {
       id: "block-2-1",
-      type: BlockType.HEADING_1,
-      content: "What is Notion?",
+      type: BlockType.HEADING_2,
+      content: "Mission & Vision",
     },
     {
       id: "block-2-2",
       type: BlockType.PARAGRAPH,
       content:
-        "Notion is a workspace that adapts to your needs. It's as minimal or as powerful as you need it to be.",
-    },
-    {
-      id: "block-2-3",
-      type: BlockType.BULLET_LIST,
-      content: "Take notes",
-    },
-    {
-      id: "block-2-4",
-      type: BlockType.BULLET_LIST,
-      content: "Manage projects",
-    },
-    {
-      id: "block-2-5",
-      type: BlockType.BULLET_LIST,
-      content: "Create wikis",
+        "We build tools that empower small businesses to scale with confidence.",
     },
   ],
   "page-3": [
     {
       id: "block-3-1",
       type: BlockType.HEADING_1,
-      content: "How to use this template",
+      content: "Current Tech Stack",
     },
     {
       id: "block-3-2",
-      type: BlockType.PARAGRAPH,
-      content:
-        "This template provides a starting point for your Notion workspace.",
+      type: BlockType.BULLET_LIST,
+      content: "React + Vite",
     },
     {
       id: "block-3-3",
-      type: BlockType.TO_DO,
-      content: "Create your first page",
-      checked: true,
+      type: BlockType.BULLET_LIST,
+      content: "Node.js + tRPC",
     },
     {
       id: "block-3-4",
+      type: BlockType.BULLET_LIST,
+      content: "PostgreSQL + Prisma",
+    },
+  ],
+  "page-4": [
+    {
+      id: "block-4-1",
+      type: BlockType.CODE,
+      content: "npx create-react-app my-app --template typescript",
+    },
+    {
+      id: "block-4-2",
+      type: BlockType.PARAGRAPH,
+      content: "Run the command above to spin up a TypeScript-based frontend.",
+    },
+  ],
+  "page-5": [
+    {
+      id: "block-5-1",
+      type: BlockType.HEADING_2,
+      content: "Brain Dump",
+    },
+    {
+      id: "block-5-2",
       type: BlockType.TO_DO,
-      content: "Add some content",
+      content: "Build a dark mode toggle",
       checked: false,
     },
     {
-      id: "block-3-5",
+      id: "block-5-3",
       type: BlockType.TO_DO,
-      content: "Share with your team",
+      content: "Add AI-powered search",
       checked: false,
+    },
+  ],
+  "page-6": [
+    {
+      id: "block-6-1",
+      type: BlockType.PARAGRAPH,
+      content: "Users want to archive projects instead of deleting them.",
+    },
+    {
+      id: "block-6-2",
+      type: BlockType.BULLET_LIST,
+      content: "Implement project archiving",
+    },
+    {
+      id: "block-6-3",
+      type: BlockType.BULLET_LIST,
+      content: "Show archived projects on a separate tab",
+    },
+  ],
+  "page-8": [
+    {
+      id: "block-8-1",
+      type: BlockType.HEADING_3,
+      content: "April 5th, 2025 — Product Sync",
+    },
+    {
+      id: "block-8-2",
+      type: BlockType.PARAGRAPH,
+      content:
+        "Discussed launching beta for the new dashboard redesign in June.",
+    },
+  ],
+  "page-10": [
+    {
+      id: "block-10-1",
+      type: BlockType.HEADING_1,
+      content: "Q1 Goals",
+    },
+    {
+      id: "block-10-2",
+      type: BlockType.BULLET_LIST,
+      content: "Launch mobile app",
+    },
+    {
+      id: "block-10-3",
+      type: BlockType.BULLET_LIST,
+      content: "Reach 5K MAUs",
     },
   ],
 };

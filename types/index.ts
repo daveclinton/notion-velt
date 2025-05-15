@@ -22,6 +22,7 @@ export enum BlockType {
   NUMBERED_LIST = "numbered_list",
   TO_DO = "to_do",
   CODE = "code",
+  QOUTE = "quote",
 }
 
 export interface DummyUser {
