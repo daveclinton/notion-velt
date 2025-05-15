@@ -1,19 +1,21 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
-import React, { createContext, useContext, useState, ReactNode } from "react";
 
+import React, { createContext, useContext, useState, ReactNode } from "react";
 import { Page, Block } from "@/types";
-import { pageTree, pageBlocks, findPageById } from "../mock-data";
+import { pageTree, pageBlocks } from "../mock-data";
+
+// Define types
+interface SidebarState {
+  isOpen: boolean;
+  toggle: () => void;
+}
 
 interface AppContextType {
   pages: Page[];
-  currentPageId: string | null;
   blocks: Record<string, Block[]>;
   expandedPageIds: Set<string>;
   isPageExpanded: (id: string) => boolean;
   togglePageExpanded: (id: string) => void;
-  setCurrentPageId: (id: string | null) => void;
-  getCurrentPage: () => Page | null;
   getCurrentPageBlocks: () => Block[];
   updateBlock: (
     pageId: string,
@@ -25,87 +27,79 @@ interface AppContextType {
   createPage: (title: string, parentId: string | null) => Page;
   deletePage: (id: string) => void;
   updatePageTitle: (id: string, title: string) => void;
-  sidebar: {
-    isOpen: boolean;
-    toggle: () => void;
-  };
+  sidebar: SidebarState;
 }
 
+// Create context
 const AppContext = createContext<AppContextType | undefined>(undefined);
 
-export function AppProvider({ children }: { children: ReactNode }) {
+interface AppProviderProps {
+  children: ReactNode;
+}
+
+export function AppProvider({ children }: AppProviderProps) {
+  // State
   const [pages, setPages] = useState<Page[]>(pageTree);
-  const [currentPageId, setCurrentPageId] = useState<string | null>("page-1");
   const [blocks, setBlocks] = useState<Record<string, Block[]>>(pageBlocks);
   const [expandedPageIds, setExpandedPageIds] = useState<Set<string>>(
     new Set(["page-1", "page-3", "page-5"])
   );
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
+  // Page expansion handlers
   const isPageExpanded = (id: string) => expandedPageIds.has(id);
 
   const togglePageExpanded = (id: string) => {
-    const newExpandedPageIds = new Set(expandedPageIds);
-    if (newExpandedPageIds.has(id)) {
-      newExpandedPageIds.delete(id);
-    } else {
-      newExpandedPageIds.add(id);
-    }
-    setExpandedPageIds(newExpandedPageIds);
+    setExpandedPageIds((prev) => {
+      const newSet = new Set(prev);
+      if (newSet.has(id)) {
+        newSet.delete(id);
+      } else {
+        newSet.add(id);
+      }
+      return newSet;
+    });
   };
 
-  const getCurrentPage = () => {
-    if (!currentPageId) return null;
-    return findPageById(currentPageId, pages);
-  };
-
-  const getCurrentPageBlocks = () => {
-    if (!currentPageId) return [];
-    return blocks[currentPageId] || [];
-  };
+  // Block handlers
+  const getCurrentPageBlocks = () => blocks[pages[0]?.id] || [];
 
   const updateBlock = (
     pageId: string,
     blockId: string,
     updates: Partial<Block>
   ) => {
-    setBlocks((prevBlocks) => {
-      const pageBlocks = prevBlocks[pageId] || [];
-      const updatedPageBlocks = pageBlocks.map((block) =>
+    setBlocks((prev) => ({
+      ...prev,
+      [pageId]: (prev[pageId] || []).map((block) =>
         block.id === blockId ? { ...block, ...updates } : block
-      );
-      return { ...prevBlocks, [pageId]: updatedPageBlocks };
-    });
+      ),
+    }));
   };
 
   const addBlock = (pageId: string, block: Block) => {
-    setBlocks((prevBlocks) => {
-      const pageBlocks = prevBlocks[pageId] || [];
-      return { ...prevBlocks, [pageId]: [...pageBlocks, block] };
-    });
+    setBlocks((prev) => ({
+      ...prev,
+      [pageId]: [...(prev[pageId] || []), block],
+    }));
   };
 
   const deleteBlock = (pageId: string, blockId: string) => {
-    setBlocks((prevBlocks) => {
-      const pageBlocks = prevBlocks[pageId] || [];
-      const updatedPageBlocks = pageBlocks.filter(
-        (block) => block.id !== blockId
-      );
-      return { ...prevBlocks, [pageId]: updatedPageBlocks };
-    });
+    setBlocks((prev) => ({
+      ...prev,
+      [pageId]: (prev[pageId] || []).filter((block) => block.id !== blockId),
+    }));
   };
 
-  // Helper function to recursively update a page in the tree
+  // Page tree helpers
   const updatePageInTree = (
     pages: Page[],
     id: string,
     updateFn: (page: Page) => Page
   ): Page[] => {
     return pages.map((page) => {
-      if (page.id === id) {
-        return updateFn(page);
-      }
-      if (page.children.length > 0) {
+      if (page.id === id) return updateFn(page);
+      if (page.children.length) {
         return {
           ...page,
           children: updatePageInTree(page.children, id, updateFn),
@@ -115,17 +109,17 @@ export function AppProvider({ children }: { children: ReactNode }) {
     });
   };
 
-  // Helper function to delete a page from the tree
   const deletePageFromTree = (pages: Page[], id: string): Page[] => {
     return pages.filter((page) => {
       if (page.id === id) return false;
-      if (page.children.length > 0) {
+      if (page.children.length) {
         page.children = deletePageFromTree(page.children, id);
       }
       return true;
     });
   };
 
+  // Page handlers
   const createPage = (title: string, parentId: string | null) => {
     const newPage: Page = {
       id: `page-${Date.now()}`,
@@ -134,70 +128,59 @@ export function AppProvider({ children }: { children: ReactNode }) {
       children: [],
     };
 
-    setBlocks(
-      (prevBlocks) =>
-        ({
-          ...prevBlocks,
-          [newPage.id]: [
-            {
-              id: `block-${Date.now()}-1`,
-              type: "heading_1",
-              content: title,
-            },
-            {
-              id: `block-${Date.now()}-2`,
-              type: "paragraph",
-              content: "",
-            },
-          ],
-        } as any)
-    );
+    setBlocks((prev) => ({
+      ...prev,
+      [newPage.id]: [
+        {
+          id: `block-${Date.now()}-1`,
+          type: "heading_1",
+          content: title,
+        } as Block,
+        {
+          id: `block-${Date.now()}-2`,
+          type: "paragraph",
+          content: "",
+        } as Block,
+      ],
+    }));
 
-    if (parentId) {
-      setPages((prevPages) => {
-        return updatePageInTree(prevPages, parentId, (page) => ({
-          ...page,
-          children: [...page.children, newPage],
-        }));
-      });
-    } else {
-      setPages((prevPages) => [...prevPages, newPage]);
-    }
+    setPages((prev) =>
+      parentId
+        ? updatePageInTree(prev, parentId, (page) => ({
+            ...page,
+            children: [...page.children, newPage],
+          }))
+        : [...prev, newPage]
+    );
 
     return newPage;
   };
 
   const deletePage = (id: string) => {
-    setPages((prevPages) => deletePageFromTree(prevPages, id));
-    setBlocks((prevBlocks) => {
-      const newBlocks = { ...prevBlocks };
+    setPages((prev) => deletePageFromTree(prev, id));
+    setBlocks((prev) => {
+      const newBlocks = { ...prev };
       delete newBlocks[id];
       return newBlocks;
     });
   };
 
   const updatePageTitle = (id: string, title: string) => {
-    setPages((prevPages) => {
-      return updatePageInTree(prevPages, id, (page) => ({
-        ...page,
-        title,
-      }));
-    });
+    setPages((prev) =>
+      updatePageInTree(prev, id, (page) => ({ ...page, title }))
+    );
   };
 
-  const toggleSidebar = () => {
-    setIsSidebarOpen((prev) => !prev);
-  };
+  // Sidebar handlers
+  const toggleSidebar = () => setIsSidebarOpen((prev) => !prev);
 
-  const value = {
+  // Context value
+  const value: AppContextType = {
     pages,
-    currentPageId,
     blocks,
     expandedPageIds,
     isPageExpanded,
     togglePageExpanded,
-    setCurrentPageId,
-    getCurrentPage,
     getCurrentPageBlocks,
     updateBlock,
     addBlock,
@@ -216,7 +199,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
 
 export function useApp() {
   const context = useContext(AppContext);
-  if (context === undefined) {
+  if (!context) {
     throw new Error("useApp must be used within an AppProvider");
   }
   return context;

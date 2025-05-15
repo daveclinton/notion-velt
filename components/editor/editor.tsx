@@ -1,27 +1,26 @@
 "use client";
 import { useState } from "react";
 import { useApp } from "@/lib/context/app-context";
-import { Block, BlockType } from "@/types";
+import { Block, BlockType, Page } from "@/types";
 import { TipTapEditor } from "./tiptap-editor";
 import { EditorToolbar } from "./editor-toolbar";
 import { Skeleton } from "@/components/ui/skeleton";
 import { PageHeader } from "./page-header";
 import { SidebarTrigger } from "../ui/sidebar";
 
-export function Editor() {
-  const {
-    currentPageId,
-    getCurrentPage,
-    getCurrentPageBlocks,
-    addBlock,
-    deleteBlock,
-  } = useApp();
+export function Editor({
+  currentPageId,
+  currentPage,
+}: {
+  currentPageId: string;
+  currentPage: Page;
+}) {
+  const { getCurrentPageBlocks, addBlock, deleteBlock } = useApp();
   const [focusedBlockId, setFocusedBlockId] = useState<string | null>(null);
 
-  const currentPage = getCurrentPage();
   const blocks = getCurrentPageBlocks();
 
-  if (!currentPageId || !currentPage) {
+  if (!currentPageId) {
     return (
       <div className="flex-1 p-6 overflow-auto">
         <div className="max-w-3xl mx-auto">
@@ -53,14 +52,10 @@ export function Editor() {
 
   const handleBlockDelete = (blockId: string) => {
     if (!currentPageId) return;
-
-    // Find block index before deleting
     const blockIndex = blocks.findIndex((b) => b.id === blockId);
     if (blockIndex < 0) return;
 
     deleteBlock(currentPageId, blockId);
-
-    // Focus previous block if available
     if (blocks.length > 1) {
       const prevBlockIndex = Math.max(0, blockIndex - 1);
       if (blocks[prevBlockIndex]) {
