@@ -1,36 +1,9 @@
 import { Editor } from "@/components/editor/editor";
+import { findPageById, pageTree } from "@/lib/mock-data";
+import { Page } from "@/types";
 
-export default function Home() {
-  return (
-    <Editor
-      currentPage={{
-        id: "page-1",
-        title: "Getting Started",
-        emoji: "👋",
-        parentId: null,
-        children: [
-          {
-            id: "page-2",
-            title: "What is Notion?",
-            parentId: "page-1",
-            children: [],
-          },
-          {
-            id: "page-3",
-            title: "How to use this template",
-            parentId: "page-1",
-            children: [
-              {
-                id: "page-4",
-                title: "Creating your first page",
-                parentId: "page-3",
-                children: [],
-              },
-            ],
-          },
-        ],
-      }}
-      currentPageId="dhbdhdb"
-    />
-  );
+export default function Home({ params }: { params: { pageId: string } }) {
+  const pageId = params.pageId;
+  const currentPage = findPageById(pageId, pageTree);
+  return <Editor currentPage={currentPage as Page} currentPageId={pageId} />;
 }
