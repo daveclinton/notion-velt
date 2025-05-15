@@ -1,6 +1,6 @@
-import { BlockType, Page, Block } from "@/types";
+import { BlockType, Page, Block, DummyUser } from "@/types";
 
-export const dummyUsers = [
+export const dummyUsers: DummyUser[] = [
   {
     id: "user1",
     name: "Alice Smith",
@@ -164,7 +164,6 @@ export const pageBlocks: Record<string, Block[]> = {
   ],
 };
 
-// Helper function to find a page by ID in the page tree
 export function findPageById(
   id: string,
   pages: Page[] = pageTree

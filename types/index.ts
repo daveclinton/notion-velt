@@ -30,7 +30,12 @@ export interface User {
   avatar: string;
 }
 
-export interface CollaboratorInfo {
-  user: User;
-  lastActive: Date;
+export interface DummyUser {
+  id: string;
+  name: string;
+  avatar: string;
+  email: string;
+  organizationId: string;
+  color: string;
+  textColor: string;
 }
