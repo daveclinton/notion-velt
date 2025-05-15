@@ -7,6 +7,10 @@ import { EditorToolbar } from "./editor-toolbar";
 import { Skeleton } from "@/components/ui/skeleton";
 import { PageHeader } from "./page-header";
 import { VeltSidebarButton } from "@veltdev/react";
+import { useSidebar } from "../ui/sidebar";
+import { Button } from "../ui/button";
+import { cn } from "@/lib/utils";
+import { ChevronsLeft, ChevronsRight } from "lucide-react";
 
 export function Editor({
   currentPageId,
@@ -18,6 +22,7 @@ export function Editor({
   const [blocks, setBlocks] = useState<Block[]>(
     pageBlocks[currentPageId] || []
   );
+  const { state, toggleSidebar } = useSidebar();
   const [focusedBlockId, setFocusedBlockId] = useState<string | null>(null);
 
   if (!currentPageId || !currentPage) {
@@ -76,6 +81,23 @@ export function Editor({
 
   return (
     <div className="flex-1 p-6 overflow-auto bg-accent relative">
+      <Button
+        data-sidebar="trigger"
+        data-slot="sidebar-trigger"
+        variant="ghost"
+        size="icon"
+        className={cn("size-9")}
+        onClick={() => {
+          toggleSidebar();
+        }}
+      >
+        {state === "expanded" ? (
+          <ChevronsLeft size={40} />
+        ) : (
+          <ChevronsRight size={40} />
+        )}
+        <span className="sr-only">Toggle Sidebar</span>
+      </Button>
       <div className="absolute top-6 right-6 -mr-1">
         <div className="toolbar">
           <VeltSidebarButton />
