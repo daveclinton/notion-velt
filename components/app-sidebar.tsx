@@ -4,19 +4,10 @@ import type * as React from "react";
 import {
   ChevronDown,
   Search,
-  Home,
-  Inbox,
   FileText,
-  Plus,
-  Twitter,
-  Rocket,
-  HomeIcon,
-  CheckSquare,
-  Book,
   Users,
   HelpCircle,
   Send,
-  Sparkles,
   Settings,
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
@@ -32,6 +23,40 @@ import {
   SidebarMenuItem,
   SidebarFooter,
 } from "@/components/ui/sidebar";
+
+import Link from "next/link";
+import { pageTree } from "@/lib/mock-data";
+
+const PageMenuItem: React.FC<{
+  page: (typeof pageTree)[0];
+  depth?: number;
+}> = ({ page, depth = 0 }) => {
+  const indent = depth * 12;
+
+  return (
+    <>
+      <SidebarMenuItem>
+        <SidebarMenuButton
+          asChild
+          className="gap-2 hover:bg-accent"
+          style={{ paddingLeft: `${16 + indent}px` }}
+        >
+          <Link href={`/${page.id}`}>
+            {page.emoji ? (
+              <span className="text-base">{page.emoji}</span>
+            ) : (
+              <FileText className="h-4 w-4" />
+            )}
+            <span className="truncate">{page.title}</span>
+          </Link>
+        </SidebarMenuButton>
+      </SidebarMenuItem>
+      {page.children.map((child) => (
+        <PageMenuItem key={child.id} page={child} depth={depth + 1} />
+      ))}
+    </>
+  );
+};
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
@@ -59,157 +84,15 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       </SidebarHeader>
 
       <SidebarContent className="px-3 py-2">
-        <SidebarMenu>
-          <SidebarMenuItem>
-            <SidebarMenuButton className="gap-2 hover:bg-accent">
-              <Sparkles className="h-4 w-4" />
-              <span>Notion AI</span>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-          <SidebarMenuItem>
-            <SidebarMenuButton className="gap-2 hover:bg-accent">
-              <Home className="h-4 w-4" />
-              <span>Home</span>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-          <SidebarMenuItem>
-            <SidebarMenuButton className="gap-2 hover:bg-accent">
-              <Inbox className="h-4 w-4" />
-              <span>Inbox</span>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-        </SidebarMenu>
-
         <SidebarGroup className="mt-6">
           <SidebarGroupLabel className="font-medium">
             Workspace
           </SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              <SidebarMenuItem>
-                <SidebarMenuButton className="gap-2 hover:bg-accent bg-accent">
-                  <FileText className="h-4 w-4" />
-                  <span className="truncate">
-                    Agile Project Plan: Octavia...
-                  </span>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-              <SidebarMenuItem>
-                <SidebarMenuButton className="gap-2 hover:bg-accent">
-                  <FileText className="h-4 w-4" />
-                  <span className="truncate">Dragon&apos;s jobs board</span>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-              <SidebarMenuItem>
-                <SidebarMenuButton className="gap-2 hover:bg-accent">
-                  <FileText className="h-4 w-4" />
-                  <span className="truncate">Nebius x Studio1</span>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
-
-        <SidebarGroup className="mt-6">
-          <SidebarGroupLabel className="font-medium">
-            Favorites
-          </SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              <SidebarMenuItem>
-                <SidebarMenuButton className="gap-2 hover:bg-accent">
-                  <FileText className="h-4 w-4" />
-                  <span className="truncate">Building an AI-powered Fi...</span>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
-
-        <SidebarGroup className="mt-6">
-          <SidebarGroupLabel className="font-medium">Shared</SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              <SidebarMenuItem>
-                <SidebarMenuButton className="gap-2 hover:bg-accent">
-                  <FileText className="h-4 w-4" />
-                  <span className="truncate">Building an AI-powered Fi...</span>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-              <SidebarMenuItem>
-                <SidebarMenuButton className="gap-2 hover:bg-accent">
-                  <FileText className="h-4 w-4" />
-                  <span className="truncate">4-Week Agile Project Plan...</span>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-              <SidebarMenuItem>
-                <SidebarMenuButton className="gap-2 hover:bg-accent">
-                  <FileText className="h-4 w-4" />
-                  <span className="truncate">Code completion showdo...</span>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
-
-        <SidebarGroup className="mt-6">
-          <SidebarGroupLabel className="font-medium">Private</SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              <SidebarMenuItem>
-                <SidebarMenuButton className="gap-2 hover:bg-accent">
-                  <FileText className="h-4 w-4" />
-                  <span className="truncate">Building an AI-powered Fi...</span>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-              <SidebarMenuItem>
-                <SidebarMenuButton className="gap-2 hover:bg-accent">
-                  <Plus className="h-4 w-4" />
-                  <span>Notion Projects</span>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-              <SidebarMenuItem>
-                <SidebarMenuButton className="gap-2 hover:bg-accent">
-                  <Twitter className="h-4 w-4" />
-                  <span>Tweets</span>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-              <SidebarMenuItem>
-                <SidebarMenuButton className="gap-2 hover:bg-accent">
-                  <FileText className="h-4 w-4" />
-                  <span>Getting Started on Mobile</span>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-              <SidebarMenuItem>
-                <SidebarMenuButton className="gap-2 hover:bg-accent">
-                  <Rocket className="h-4 w-4" />
-                  <span>Amazon AWS EC2</span>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-              <SidebarMenuItem>
-                <SidebarMenuButton className="gap-2 hover:bg-accent">
-                  <HomeIcon className="h-4 w-4" />
-                  <span>Personal Home</span>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-              <SidebarMenuItem>
-                <SidebarMenuButton className="gap-2 hover:bg-accent">
-                  <CheckSquare className="h-4 w-4" />
-                  <span>Task List</span>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-              <SidebarMenuItem>
-                <SidebarMenuButton className="gap-2 hover:bg-accent">
-                  <Book className="h-4 w-4" />
-                  <span>Journal</span>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-              <SidebarMenuItem>
-                <SidebarMenuButton className="gap-2 hover:bg-accent">
-                  <Book className="h-4 w-4" />
-                  <span>Reading List</span>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
+              {pageTree.map((page) => (
+                <PageMenuItem key={page.id} page={page} />
+              ))}
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
