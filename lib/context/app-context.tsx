@@ -4,7 +4,6 @@ import React, { createContext, useContext, useState, ReactNode } from "react";
 import { PageTreeType, Block } from "@/types";
 import { pageTree, pageBlocks } from "../mock-data";
 
-// Define types
 interface SidebarState {
   isOpen: boolean;
   toggle: () => void;
@@ -30,7 +29,6 @@ interface AppContextType {
   sidebar: SidebarState;
 }
 
-// Create context
 const AppContext = createContext<AppContextType | undefined>(undefined);
 
 interface AppProviderProps {
@@ -38,7 +36,6 @@ interface AppProviderProps {
 }
 
 export function AppProvider({ children }: AppProviderProps) {
-  // State
   const [pages, setPages] = useState<PageTreeType[]>(pageTree);
   const [blocks, setBlocks] = useState<Record<string, Block[]>>(pageBlocks);
   const [expandedPageIds, setExpandedPageIds] = useState<Set<string>>(
@@ -46,7 +43,6 @@ export function AppProvider({ children }: AppProviderProps) {
   );
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
-  // PageTreeType expansion handlers
   const isPageExpanded = (id: string) => expandedPageIds.has(id);
 
   const togglePageExpanded = (id: string) => {
@@ -61,7 +57,6 @@ export function AppProvider({ children }: AppProviderProps) {
     });
   };
 
-  // Block handlers
   const getCurrentPageBlocks = () => blocks[pages[0]?.id] || [];
 
   const updateBlock = (
@@ -91,7 +86,6 @@ export function AppProvider({ children }: AppProviderProps) {
     }));
   };
 
-  // PageTreeType tree helpers
   const updatePageInTree = (
     pages: PageTreeType[],
     id: string,
@@ -122,7 +116,6 @@ export function AppProvider({ children }: AppProviderProps) {
     });
   };
 
-  // PageTreeType handlers
   const createPage = (title: string, parentId: string | null) => {
     const newPage: PageTreeType = {
       id: `page-${Date.now()}`,
@@ -174,10 +167,8 @@ export function AppProvider({ children }: AppProviderProps) {
     );
   };
 
-  // Sidebar handlers
   const toggleSidebar = () => setIsSidebarOpen((prev) => !prev);
 
-  // Context value
   const value: AppContextType = {
     pages,
     blocks,
