@@ -3,31 +3,11 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useApp } from "@/lib/context/app-context";
 import { Page } from "@/types";
 import { useIdentify, useSetDocument } from "@veltdev/react";
+import { dummyUsers } from "@/lib/mock-data";
 
 interface PageHeaderProps {
   page: Page;
 }
-
-const dummyUsers = [
-  {
-    id: "user1",
-    name: "Alice Smith",
-    avatar: "https://i.pravatar.cc/150?img=1",
-    email: "alice@gmail.com",
-    organizationId: "org123",
-    color: "#FF5733",
-    textColor: "#FFFFFF",
-  },
-  {
-    id: "user2",
-    name: "Bob Jones",
-    avatar: "https://i.pravatar.cc/150?img=2",
-    email: "bob@gmail.com",
-    organizationId: "org123",
-    color: "#33B5FF",
-    textColor: "#FFFFFF",
-  },
-];
 
 export function PageHeader({ page }: PageHeaderProps) {
   const { updatePageTitle } = useApp();

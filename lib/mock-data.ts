@@ -18,6 +18,27 @@ export const users: User[] = [
   },
 ];
 
+export const dummyUsers = [
+  {
+    id: "user1",
+    name: "Alice Smith",
+    avatar: "https://i.pravatar.cc/150?img=1",
+    email: "alice@gmail.com",
+    organizationId: "org123",
+    color: "#FF5733",
+    textColor: "#FFFFFF",
+  },
+  {
+    id: "user2",
+    name: "Bob Jones",
+    avatar: "https://i.pravatar.cc/150?img=2",
+    email: "bob@gmail.com",
+    organizationId: "org123",
+    color: "#33B5FF",
+    textColor: "#FFFFFF",
+  },
+];
+
 export const collaborators: CollaboratorInfo[] = [
   {
     user: users[0],
