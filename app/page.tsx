@@ -1,5 +1,7 @@
-import { Editor } from "@/components/editor/editor";
+import React from "react";
 
-export default function Home() {
-  return <Editor />;
-}
+const page = () => {
+  return <div>page</div>;
+};
+
+export default page;
