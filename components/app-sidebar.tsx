@@ -65,8 +65,37 @@ const PageMenuItem: React.FC<{
   );
 };
 
+// Helper function to filter pages recursively
+const filterPages = (
+  pages: typeof pageTree,
+  query: string
+): typeof pageTree => {
+  if (!query) return pages;
+
+  const lowerQuery = query.toLowerCase();
+
+  return pages
+    .map((page) => {
+      // Check if the page title matches the query
+      const matches = page.title.toLowerCase().includes(lowerQuery);
+      // Recursively filter children
+      const filteredChildren = filterPages(page.children, query);
+
+      // Include the page if it matches or has matching children
+      if (matches || filteredChildren.length > 0) {
+        return {
+          ...page,
+          children: filteredChildren,
+        };
+      }
+      return null;
+    })
+    .filter((page): page is (typeof pageTree)[0] => page !== null);
+};
+
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const [currentUser, setCurrentUser] = useState(dummyUsers[0]);
+  const [searchQuery, setSearchQuery] = useState(""); // State for search input
 
   useIdentify(
     {
@@ -84,6 +113,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const handleUserSwitch = (user: (typeof dummyUsers)[0]) => {
     setCurrentUser(user);
   };
+
+  // Filter pages based on search query
+  const filteredPages = filterPages(pageTree, searchQuery);
 
   return (
     <Sidebar {...props}>
@@ -128,6 +160,8 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           <Input
             placeholder="Search"
             className="pl-9 bg-accent border-none h-8 text-sm focus-visible:ring-0"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)} // Update search query
           />
         </div>
       </SidebarHeader>
@@ -139,9 +173,15 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           </SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {pageTree.map((page) => (
-                <PageMenuItem key={page.id} page={page} />
-              ))}
+              {filteredPages.length > 0 ? (
+                filteredPages.map((page) => (
+                  <PageMenuItem key={page.id} page={page} />
+                ))
+              ) : (
+                <div className="p-4 text-sm text-muted-foreground">
+                  No results found
+                </div>
+              )}
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
