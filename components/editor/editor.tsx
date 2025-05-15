@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import { useApp } from "@/lib/context/app-context";
-import { Block, BlockType, Page } from "@/types";
+import { Block, BlockType, PageTreeType } from "@/types";
 import { TipTapEditor } from "./tiptap-editor";
 import { EditorToolbar } from "./editor-toolbar";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -13,7 +13,7 @@ export function Editor({
   currentPage,
 }: {
   currentPageId: string;
-  currentPage: Page;
+  currentPage: PageTreeType;
 }) {
   const { getCurrentPageBlocks, addBlock, deleteBlock } = useApp();
   const [focusedBlockId, setFocusedBlockId] = useState<string | null>(null);

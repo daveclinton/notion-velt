@@ -33,6 +33,7 @@ import {
 import Link from "next/link";
 import { pageTree, dummyUsers } from "@/lib/mock-data";
 import { useIdentify } from "@veltdev/react";
+import { PageTreeType } from "@/types";
 
 const PageMenuItem: React.FC<{
   page: (typeof pageTree)[0];
@@ -58,7 +59,7 @@ const PageMenuItem: React.FC<{
           </Link>
         </SidebarMenuButton>
       </SidebarMenuItem>
-      {page.children.map((child) => (
+      {page.children.map((child: PageTreeType) => (
         <PageMenuItem key={child.id} page={child} depth={depth + 1} />
       ))}
     </>

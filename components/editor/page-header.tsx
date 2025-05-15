@@ -1,10 +1,10 @@
 import { useState, useRef, useEffect } from "react";
 import { useApp } from "@/lib/context/app-context";
-import { Page } from "@/types";
+import { PageTreeType } from "@/types";
 import { useSetDocument } from "@veltdev/react";
 
 interface PageHeaderProps {
-  page: Page;
+  page: PageTreeType;
 }
 
 export function PageHeader({ page }: PageHeaderProps) {

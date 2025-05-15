@@ -1,9 +1,9 @@
-export interface Page {
+export interface PageTreeType {
   id: string;
   title: string;
   emoji?: string;
   parentId: string | null;
-  children: Page[];
+  children: PageTreeType[];
 }
 
 export interface Block {
