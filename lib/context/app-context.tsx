@@ -2,18 +2,12 @@
 "use client";
 import React, { createContext, useContext, useState, ReactNode } from "react";
 
-import { Page, Block, CollaboratorInfo } from "@/types";
-import {
-  pageTree,
-  pageBlocks,
-  collaborators,
-  findPageById,
-} from "../mock-data";
+import { Page, Block } from "@/types";
+import { pageTree, pageBlocks, findPageById } from "../mock-data";
 
 interface AppContextType {
   pages: Page[];
   currentPageId: string | null;
-  collaborators: CollaboratorInfo[];
   blocks: Record<string, Block[]>;
   expandedPageIds: Set<string>;
   isPageExpanded: (id: string) => boolean;
@@ -42,7 +36,6 @@ const AppContext = createContext<AppContextType | undefined>(undefined);
 export function AppProvider({ children }: { children: ReactNode }) {
   const [pages, setPages] = useState<Page[]>(pageTree);
   const [currentPageId, setCurrentPageId] = useState<string | null>("page-1");
-  const [currentCollaborators] = useState<CollaboratorInfo[]>(collaborators);
   const [blocks, setBlocks] = useState<Record<string, Block[]>>(pageBlocks);
   const [expandedPageIds, setExpandedPageIds] = useState<Set<string>>(
     new Set(["page-1", "page-3", "page-5"])
@@ -199,7 +192,6 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const value = {
     pages,
     currentPageId,
-    collaborators: currentCollaborators,
     blocks,
     expandedPageIds,
     isPageExpanded,

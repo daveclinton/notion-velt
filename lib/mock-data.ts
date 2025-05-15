@@ -1,22 +1,4 @@
-import { BlockType, Page, Block, User, CollaboratorInfo } from "@/types";
-
-export const users: User[] = [
-  {
-    id: "user-1",
-    name: "John Doe",
-    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=John",
-  },
-  {
-    id: "user-2",
-    name: "Jane Smith",
-    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Jane",
-  },
-  {
-    id: "user-3",
-    name: "Sam Wilson",
-    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Sam",
-  },
-];
+import { BlockType, Page, Block } from "@/types";
 
 export const dummyUsers = [
   {
@@ -36,17 +18,6 @@ export const dummyUsers = [
     organizationId: "org123",
     color: "#33B5FF",
     textColor: "#FFFFFF",
-  },
-];
-
-export const collaborators: CollaboratorInfo[] = [
-  {
-    user: users[0],
-    lastActive: new Date(),
-  },
-  {
-    user: users[1],
-    lastActive: new Date(Date.now() - 1000 * 60 * 5), // 5 minutes ago
   },
 ];
 
