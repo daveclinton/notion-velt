@@ -327,10 +327,10 @@ export function TipTapEditor({
             }}
             disabled={editor.state.selection.empty}
             className={cn(
-              "px-2 py-1 text-sm rounded",
+              "px-2 py-1 text-sm rounded border border-gray-300 shadow-sm",
               editor.state.selection.empty
-                ? "text-gray-400 cursor-not-allowed"
-                : "text-white hover:"
+                ? "bg-gray-300 text-gray-500 cursor-not-allowed"
+                : "bg-gray-100 text-gray-900 hover:bg-gray-200"
             )}
             title="Add comment"
           >
