@@ -140,14 +140,14 @@ export function TipTapEditor({
             onBackspace,
           }),
           CommentShortcut.configure({
-            config: tiptapVeltCommentConfig, // Now accessible
+            config: tiptapVeltCommentConfig,
           }),
         ],
         immediatelyRender: false,
         content: block.content || "",
         editorProps: {
           attributes: {
-            class: "outline-none min-h-[1.5em]",
+            class: "outline-none min-h-[1.5em] text-gray-200 bg-gray-900",
           },
         },
         onUpdate: ({ editor }: { editor: TiptapEditorType }) => {
@@ -253,42 +253,68 @@ export function TipTapEditor({
   const getBlockClassName = useCallback((): string => {
     switch (block.type) {
       case BlockType.HEADING_1:
-        return "text-2xl font-bold";
+        return "text-2xl font-bold text-gray-100";
       case BlockType.HEADING_2:
-        return "text-xl font-bold";
+        return "text-xl font-bold text-gray-100";
       case BlockType.HEADING_3:
-        return "text-lg font-bold";
+        return "text-lg font-bold text-gray-100";
       case BlockType.CODE:
-        return "bg-gray-100 rounded p-2 font-mono text-sm whitespace-pre-wrap";
+        return "bg-gray-800 rounded p-2 font-mono text-sm text-gray-200 whitespace-pre-wrap";
       case BlockType.TO_DO:
-        return block.checked ? "line-through text-gray-400" : "";
+        return block.checked ? "line-through text-gray-500" : "text-gray-200";
       default:
-        return "";
+        return "text-gray-200";
     }
   }, [block.type, block.checked]);
 
   const renderPrefix = useCallback(() => {
     if (block.type === BlockType.NUMBERED_LIST) {
       return (
-        <div className="mr-2 text-gray-500 select-none whitespace-nowrap">
+        <div className="mr-2 text-gray-400 select-none whitespace-nowrap">
           {index + 1}.
         </div>
       );
     } else if (block.type === BlockType.BULLET_LIST) {
-      return <div className="mr-2 mt-1.5 text-gray-500 select-none">•</div>;
+      return <div className="mr-2 mt-1.5 text-gray-400 select-none">•</div>;
     }
     return null;
   }, [block.type, index]);
 
   if (!editor) {
-    return <div>Loading editor...</div>;
+    // Updated: Skeleton loader instead of "Loading editor..."
+    return (
+      <div
+        className={cn(
+          "p-1 my-1 rounded bg-gray-800/50 animate-pulse", // Dark-themed skeleton container
+          block.type === BlockType.HEADING_1 && "h-10",
+          block.type === BlockType.HEADING_2 && "h-8",
+          block.type === BlockType.HEADING_3 && "h-6",
+          block.type === BlockType.CODE && "h-16",
+          (block.type === BlockType.BULLET_LIST ||
+            block.type === BlockType.NUMBERED_LIST) &&
+            "h-6",
+          block.type === BlockType.TO_DO && "h-6",
+          block.type === BlockType.PARAGRAPH && "h-6" // Default paragraph
+        )}
+      >
+        <div className="flex">
+          {(block.type === BlockType.NUMBERED_LIST ||
+            block.type === BlockType.BULLET_LIST) && (
+            // Prefix placeholder for lists
+            <div className="mr-2 w-4 h-4 bg-gray-700 rounded-full" />
+          )}
+          {/* Main content placeholder */}
+          <div className="flex-1 bg-gray-700 rounded h-4" />
+        </div>
+      </div>
+    );
   }
 
   return (
     <div
       className={cn(
-        "p-1 my-1 rounded hover:bg-gray-100/50 transition-colors",
-        isFocused && "bg-gray-100/80"
+        "p-1 my-1 rounded hover:bg-gray-800/50 transition-colors",
+        isFocused && "bg-gray-800/80"
       )}
       data-block-id={block.id}
       data-block-type={block.type}
@@ -298,7 +324,7 @@ export function TipTapEditor({
         <BubbleMenu
           editor={editor}
           tippyOptions={{ duration: 100 }}
-          className="bg-white border border-gray-200 rounded shadow-md p-1 flex gap-1"
+          className="bg-gray-900 border border-gray-700 rounded shadow-md p-1 flex gap-1"
         >
           <button
             onClick={() => {
@@ -310,8 +336,8 @@ export function TipTapEditor({
             className={cn(
               "px-2 py-1 text-sm rounded",
               editor.state.selection.empty
-                ? "bg-gray-300 text-gray-500 cursor-not-allowed"
-                : "bg-blue-500 text-white hover:bg-blue-600"
+                ? "bg-gray-700 text-gray-400 cursor-not-allowed"
+                : "bg-blue-600 text-white hover:bg-blue-700"
             )}
             title="Add comment"
           >
@@ -322,7 +348,7 @@ export function TipTapEditor({
       <div
         className={cn("flex", block.type === BlockType.TO_DO && "items-start")}
       >
-        {hasComments && <span className="mr-2 text-blue-500">💬</span>}
+        {hasComments && <span className="mr-2 text-blue-400">💬</span>}
         {renderPrefix()}
         <div className={cn("flex-1", getBlockClassName())}>
           <EditorContent editor={editor} />
