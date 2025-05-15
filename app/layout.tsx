@@ -5,6 +5,7 @@ import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/app-sidebar";
 import { AppProvider } from "@/lib/context/app-context";
 import { VeltWrapper } from "@/lib/context/velt-wrapper";
+import { ThemeProvider } from "@/components/theme-provider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -27,24 +28,30 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased dark`}
       >
-        <VeltWrapper>
-          <AppProvider>
-            <SidebarProvider>
-              <AppSidebar variant="inset" />
-              <SidebarInset>
-                <div className="flex flex-1 flex-col">
-                  <div className="@container/main flex flex-1 flex-col gap-2">
-                    {children}
+        <ThemeProvider
+          attribute="class"
+          forcedTheme="dark"
+          disableTransitionOnChange
+        >
+          <VeltWrapper>
+            <AppProvider>
+              <SidebarProvider>
+                <AppSidebar variant="inset" />
+                <SidebarInset>
+                  <div className="flex flex-1 flex-col">
+                    <div className="@container/main flex flex-1 flex-col gap-2">
+                      {children}
+                    </div>
                   </div>
-                </div>
-              </SidebarInset>
-            </SidebarProvider>
-          </AppProvider>
-        </VeltWrapper>
+                </SidebarInset>
+              </SidebarProvider>
+            </AppProvider>
+          </VeltWrapper>
+        </ThemeProvider>
       </body>
     </html>
   );
