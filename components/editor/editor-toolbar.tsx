@@ -33,7 +33,7 @@ export function EditorToolbar({ onBlockTypeChange }: EditorToolbarProps) {
     <TooltipProvider>
       <div
         className={cn(
-          "fixed bottom-6 left-1/2 transform -translate-x-1/2 bg-white border border-gray-200 rounded-lg shadow-lg p-1 flex items-center transition-opacity duration-200 z-10"
+          "fixed bottom-6 left-1/2 transform -translate-x-1/2 border rounded-lg shadow-lg p-1 flex items-center transition-opacity duration-200 z-10"
         )}
       >
         <ToolbarButton
@@ -41,7 +41,7 @@ export function EditorToolbar({ onBlockTypeChange }: EditorToolbarProps) {
           onClick={() => handleBlockTypeChange(BlockType.PARAGRAPH)}
           isActive={activeType === BlockType.PARAGRAPH}
         >
-          <Type size={16} />
+          <Type size={16} className="text-white" />
         </ToolbarButton>
 
         <ToolbarButton
@@ -49,8 +49,8 @@ export function EditorToolbar({ onBlockTypeChange }: EditorToolbarProps) {
           onClick={() => handleBlockTypeChange(BlockType.HEADING_1)}
           isActive={activeType === BlockType.HEADING_1}
         >
-          <Heading size={16} />
-          <span className="ml-1">1</span>
+          <Heading size={16} className="text-white" />
+          <span className="ml-1 text-white">1</span>
         </ToolbarButton>
 
         <ToolbarButton
@@ -58,8 +58,8 @@ export function EditorToolbar({ onBlockTypeChange }: EditorToolbarProps) {
           onClick={() => handleBlockTypeChange(BlockType.HEADING_2)}
           isActive={activeType === BlockType.HEADING_2}
         >
-          <Heading size={16} />
-          <span className="ml-1">2</span>
+          <Heading size={16} className="text-white" />
+          <span className="ml-1 text-white">2</span>
         </ToolbarButton>
 
         <ToolbarButton
@@ -67,18 +67,18 @@ export function EditorToolbar({ onBlockTypeChange }: EditorToolbarProps) {
           onClick={() => handleBlockTypeChange(BlockType.HEADING_3)}
           isActive={activeType === BlockType.HEADING_3}
         >
-          <Heading size={16} />
-          <span className="ml-1">3</span>
+          <Heading size={16} className="text-white" />
+          <span className="ml-1 text-white">3</span>
         </ToolbarButton>
 
-        <div className="w-px h-6 bg-gray-200 mx-1" />
+        <div className="w-px h-6 mx-1" />
 
         <ToolbarButton
           tooltip="Bullet List"
           onClick={() => handleBlockTypeChange(BlockType.BULLET_LIST)}
           isActive={activeType === BlockType.BULLET_LIST}
         >
-          <List size={16} />
+          <List size={16} className="text-white" />
         </ToolbarButton>
 
         <ToolbarButton
@@ -86,7 +86,7 @@ export function EditorToolbar({ onBlockTypeChange }: EditorToolbarProps) {
           onClick={() => handleBlockTypeChange(BlockType.NUMBERED_LIST)}
           isActive={activeType === BlockType.NUMBERED_LIST}
         >
-          <ListOrdered size={16} />
+          <ListOrdered size={16} className="text-white" />
         </ToolbarButton>
 
         <ToolbarButton
@@ -94,17 +94,17 @@ export function EditorToolbar({ onBlockTypeChange }: EditorToolbarProps) {
           onClick={() => handleBlockTypeChange(BlockType.TO_DO)}
           isActive={activeType === BlockType.TO_DO}
         >
-          <CheckSquare size={16} />
+          <CheckSquare size={16} className="text-white" />
         </ToolbarButton>
 
-        <div className="w-px h-6 bg-gray-200 mx-1" />
+        <div className="w-px h-6 mx-1" />
 
         <ToolbarButton
           tooltip="Code"
           onClick={() => handleBlockTypeChange(BlockType.CODE)}
           isActive={activeType === BlockType.CODE}
         >
-          <Code size={16} />
+          <Code size={16} className="text-white" />
         </ToolbarButton>
       </div>
     </TooltipProvider>
@@ -130,9 +130,7 @@ function ToolbarButton({
         <button
           className={cn(
             "p-1.5 rounded flex items-center",
-            isActive
-              ? "bg-gray-200 text-gray-900"
-              : "hover:bg-gray-100 text-gray-700"
+            isActive ? "text-gray-900" : "text-gray-700"
           )}
           onClick={onClick}
         >
