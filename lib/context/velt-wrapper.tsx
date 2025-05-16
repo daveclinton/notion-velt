@@ -9,7 +9,7 @@ import {
 export function VeltWrapper({ children }: { children: ReactNode }) {
   return (
     <VeltProvider apiKey={process.env.NEXT_PUBLIC_VELT_KEY || ""}>
-      <VeltComments darkMode={true} />
+      <VeltComments dialogShadowDom={false} darkMode={true} />
       <VeltCommentsSidebar />
       {children}
     </VeltProvider>
