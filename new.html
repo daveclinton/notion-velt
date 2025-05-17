@@ -1,0 +1,588 @@
+<script type="text/javascript">
+    (function () {
+      try {
+        const allTourSteps = [
+          {
+            elementId: "sb_launchpad",
+            description: "The Launchpad is your starting point to create and manage your marketing campaigns."
+          },
+          {
+            elementId: "sb_conversations",
+            description: "Conversations lets you manage and respond to customer messages and inquiries."
+          },
+          {
+            elementId: "sb_calendars",
+            description: "Calendars helps you schedule marketing events and plan your campaigns."
+          },
+          {
+            elementId: "sb_contacts",
+            description: "Contacts allows you to organize and manage your customer and lead information."
+          },
+          {
+            elementId: "sb_sites",
+            description: "Sites and Funnels helps you create a website from our templates."
+          },
+          {
+            elementId: "tb_form-builder",
+            description: "Create, manage, and organise forms effortlessly to capture lead info and engage users—all without coding."
+          },
+          {
+            elementId: "tb_websites",
+            description: "Build Websites to showcase your products and build trusted brand."
+          },
+          {
+            elementId: "tb_funnels",
+            description: "Build funnels to generate leads, appointments and receive payment."
+          }
+        ];
+    
+        const siteTourSteps = [
+          {
+            elementId: "tb_form-builder",
+            description: "Create, manage, and organise forms effortlessly to capture lead info and engage users—all without coding."
+          },
+          {
+            elementId: "tb_websites",
+            description: "Build Websites to showcase your products and build trusted brand."
+          },
+          {
+            elementId: "tb_funnels",
+            description: "Build funnels to generate leads, appointments and receive payment."
+          }
+        ];
+    
+        class SupportPopup {
+          constructor() {
+            this.tourSteps = null;
+            this.currentStep = 0;
+            this.tourPopup = null;
+            this.campaignPopup = null;
+            this.formBuilderPopup = null;
+            this.supportButton = this.createSupportButton();
+            this.popup = this.createPopup();
+            this.setupEventListeners();
+          }
+    
+          createSupportButton() {
+            const container = document.createElement("div");
+            container.id = "support-popup-button";
+            container.style.position = "fixed";
+            container.style.bottom = "20px";
+            container.style.right = "20px";
+            container.style.background = "#28a745";
+            container.style.color = "#fff";
+            container.style.padding = "12px";
+            container.style.cursor = "pointer";
+            container.style.borderRadius = "50%";
+            container.style.zIndex = "99999";
+            container.style.fontSize = "24px";
+            container.style.lineHeight = "24px";
+            container.style.width = "52px";
+            container.style.height = "52px";
+            container.style.display = "flex";
+            container.style.alignItems = "center";
+            container.style.justifyContent = "center";
+            container.textContent = "🚀";
+            container.setAttribute("aria-label", "Open support popup");
+            container.setAttribute("title", "Start your campaign");
+            document.body.appendChild(container);
+            return container;
+          }
+    
+          createPopup() {
+            const popup = document.createElement("div");
+            popup.id = "support-popup";
+            popup.style.position = "fixed";
+            popup.style.bottom = "80px";
+            popup.style.right = "20px";
+            popup.style.background = "linear-gradient(to bottom right, #28a745, #20c997)";
+            popup.style.borderRadius = "20px";
+            popup.style.boxShadow = "0 4px 16px rgba(0, 0, 0, 0.2)";
+            popup.style.color = "#fff";
+            popup.style.fontFamily = "Arial, sans-serif";
+            popup.style.width = "380px";
+            popup.style.maxWidth = "95%";
+            popup.style.padding = "20px";
+            popup.style.zIndex = "100000";
+            popup.style.display = "none";
+            popup.style.flexDirection = "column";
+            popup.style.transition = "opacity 0.3s ease-in-out";
+            popup.style.opacity = "0";
+            document.body.appendChild(popup);
+            return popup;
+          }
+    
+          updatePopupContent(popup, isSiteRoute) {
+            const startCampaignButtonHtml = isSiteRoute ? `
+              <button id="start-campaign-btn" style="flex: 1; background: rgba(255,255,255,0.25); color: #fff; font-weight: bold; border: 2px solid #fff; padding: 12px; border-radius: 10px; cursor: pointer; backdrop-filter: blur(5px);">Start Campaign →</button>
+            ` : '';
+    
+            const popupText = isSiteRoute 
+              ? "Looks like you are in the Sites and Funnels page, want a quick tour? Click Below!"
+              : "Looks like you are on the Analytics page, want a quick tour? Click Below!";
+    
+            popup.innerHTML = `
+              <div style="margin-bottom: 16px;">
+                <h3 style="margin: 0 0 8px; font-size: 18px; font-weight:700; color:#ffffff">Let's start with a quick tour</h3>
+                <p style="margin: 0; font-size: 14px; color: #ffffff;">${popupText}</p>
+              </div>
+              <div style="display: flex; flex-direction: column; gap: 10px;">
+                <div style="display: flex; gap: 10px; margin-top: 20px;">
+                  <button id="get-started-btn" style="flex: 1; background: #fff; color: #28a745; font-weight: bold; border: none; padding: 12px; border-radius: 10px; cursor: pointer; box-shadow: 0 3px 6px rgba(0,0,0,0.1);">Get Started →</button>
+                  ${startCampaignButtonHtml}
+                </div>
+                <div class="dropdown-container" style="border-radius: 8px; overflow: hidden; margin-top: 5px;">
+                  <button class="dropdown-btn" style="width: 100%; background: rgba(255,255,255,0.15); color: #fff; border: none; padding: 10px; border-radius: 8px; text-align: left; font-size: 14px; font-weight: 600; cursor: pointer; display: flex; justify-content: space-between; align-items: center;">
+                    <span>Sites & Funnels</span><span style="transition: transform 0.3s;">↓</span>
+                  </button>
+                  <div class="dropdown-content" style="max-height: 0; overflow: hidden; transition: max-height 0.3s ease-out; background: rgba(255,255,255,0.1); border-radius: 0 0 8px 8px;">
+                    <div style="padding: 10px; font-size: 13px;">
+                      <p>Create stunning websites and high-converting funnels with our easy-to-use builder. No coding required!</p>
+                      <ul style="margin: 5px 0 0 15px; padding: 0;">
+                        <li>Pre-built templates</li>
+                        <li>Drag-and-drop editor</li>
+                        <li>Mobile responsive design</li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+                <div class="dropdown-container" style="border-radius: 8px; overflow: hidden;">
+                  <button class="dropdown-btn" style="width: 100%; background: rgba(255,255,255,0.15); color: #fff; border: none; padding: 10px; border-radius: 8px; text-align: left; font-size: 14px; cursor: pointer; display: flex; justify-content: space-between; align-items: center;">
+                    <span>Marketing and Social Media</span><span style="transition: transform 0.3s;">↓</span>
+                  </button>
+                  <div class="dropdown-content" style="max-height: 0; overflow: hidden; transition: max-height 0.3s ease-out; background: rgba(255,255,255,0.1); border-radius: 0 0 8px 8px;">
+                    <div style="padding: 10px; font-size: 13px;">
+                      <p>Manage all your marketing channels from one place. Schedule posts, analyze performance, and grow your audience.</p>
+                      <ul style="margin: 5px 0 0 15px; padding: 0;">
+                        <li>Content calendar</li>
+                        <li>Analytics dashboard</li>
+                        <li>Automated campaigns</li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+                <div class="dropdown-container" style="border-radius: 8px; overflow: hidden;">
+                  <button class="dropdown-btn" style="width: 100%; background: rgba(255,255,255,0.15); color: #fff; border: none; padding: 10px; border-radius: 8px; text-align: left; font-size: 14px; cursor: pointer; display: flex; justify-content: space-between; align-items: center;">
+                    <span>Payments & Fundraising</span><span style="transition: transform 0.3s;">↓</span>
+                  </button>
+                  <div class="dropdown-content" style="max-height: 0; overflow: hidden; transition: max-height 0.3s ease-out; background: rgba(255,255,255,0.1); border-radius: 0 0 8px 8px;">
+                    <div style="padding: 10px; font-size: 13px;">
+                      <p>Accept payments and donations securely. Set up recurring billing, manage subscriptions, and track revenue.</p>
+                      <ul style="margin: 5px 0 0 15px; padding: 0;">
+                        <li>Multiple payment gateways</li>
+                        <li>Subscription management</li>
+                        <li>Donation campaigns</li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+                <div class="dropdown-container" style="border-radius: 8px; overflow: hidden;">
+                  <button class="dropdown-btn" style="width: 100%; background: rgba(255,255,255,0.15); color: #fff; border: none; padding: 10px; border-radius: 8px; text-align: left; font-size: 14px; cursor: pointer; display: flex; justify-content: space-between; align-items: center;">
+                    <span>Conversations</span><span style="transition: transform 0.3s;">↓</span>
+                  </button>
+                  <div class="dropdown-content" style="max-height: 0; overflow: hidden; transition: max-height 0.3s ease-out; background: rgba(255,255,255,0.1); border-radius: 0 0 8px 8px;">
+                    <div style="padding: 10px; font-size: 13px;">
+                      <p>Stay connected with your audience. Manage chats, emails, and social messages in one unified inbox.</p>
+                      <ul style="margin: 5px 0 0 15px; padding: 0;">
+                        <li>Unified inbox</li>
+                        <li>Automated responses</li>
+                        <li>Contact management</li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            `;
+    
+            // Re-attach dropdown listeners
+            const dropdownBtns = popup.querySelectorAll(".dropdown-btn");
+            dropdownBtns.forEach(btn => {
+              btn.addEventListener("click", function() {
+                const content = this.nextElementSibling;
+                const arrow = this.querySelector("span:last-child");
+                document.querySelectorAll(".dropdown-content").forEach(item => {
+                  if (item !== content) {
+                    item.style.maxHeight = "0";
+                    item.previousElementSibling.querySelector("span:last-child").style.transform = "rotate(0deg)";
+                  }
+                });
+                if (content.style.maxHeight === "0px" || content.style.maxHeight === "") {
+                  content.style.maxHeight = content.scrollHeight + "px";
+                  arrow.style.transform = "rotate(180deg)";
+                } else {
+                  content.style.maxHeight = "0";
+                  arrow.style.transform = "rotate(0deg)";
+                }
+              });
+            });
+          }
+    
+          setupEventListeners() {
+            this.supportButton.addEventListener("click", (e) => {
+              e.stopPropagation();
+              if (this.popup.style.display === "flex") {
+                this.hidePopup();
+              } else {
+                this.showPopup();
+              }
+            });
+    
+            document.addEventListener("click", (e) => {
+              if (this.popup.contains(e.target) || e.target === this.supportButton) {
+                return;
+              }
+              this.hidePopup();
+            });
+    
+            document.addEventListener("keydown", (e) => {
+              if (e.key === "Escape") {
+                if (this.tourPopup) {
+                  this.endTour(false);
+                } else if (this.campaignPopup) {
+                  this.hideCampaignPopup();
+                } else if (this.formBuilderPopup) {
+                  this.hideFormBuilderPopup();
+                } else if (this.popup.style.display === "flex") {
+                  this.hidePopup();
+                }
+              }
+            });
+          }
+    
+          showPopup() {
+            const isSiteRoute = window.location.pathname.toLowerCase().includes("funnels") || 
+                                window.location.pathname.toLowerCase().includes("websites") || 
+                                window.location.pathname.toLowerCase().includes("form-builder");
+            this.tourSteps = isSiteRoute ? siteTourSteps : allTourSteps;
+    
+            this.updatePopupContent(this.popup, isSiteRoute);
+    
+            this.popup.querySelector("#get-started-btn").addEventListener("click", () => this.startTour());
+            if (isSiteRoute) {
+              const startCampaignBtn = this.popup.querySelector("#start-campaign-btn");
+              if (startCampaignBtn) {
+                startCampaignBtn.addEventListener("click", () => this.startCampaign());
+              }
+            }
+    
+            this.popup.style.display = "flex";
+            setTimeout(() => {
+              this.popup.style.opacity = "1";
+            }, 10);
+          }
+    
+          hidePopup() {
+            this.popup.style.opacity = "0";
+            setTimeout(() => {
+              this.popup.style.display = "none";
+            }, 300);
+          }
+    
+          startCampaign() {
+            this.hidePopup();
+            const formBuilder = document.getElementById("tb_form-builder");
+            if (formBuilder) {
+              formBuilder.scrollIntoView({ behavior: "smooth", block: "center" });
+              this.showCampaignPopup(formBuilder);
+              this.setupFormBuilderClickListener();
+            } else {
+              console.warn("Element with ID 'tb_form-builder' not found.");
+              alert("Form Builder section not found. Please ensure you're on the correct page.");
+            }
+          }
+    
+          showCampaignPopup(element) {
+            if (this.campaignPopup) {
+              this.campaignPopup.remove();
+            }
+    
+            const popup = document.createElement("div");
+            popup.id = "campaign-popup";
+            popup.style.position = "fixed";
+            popup.style.background = "linear-gradient(to bottom right, #28a745, #20c997)";
+            popup.style.borderRadius = "10px";
+            popup.style.boxShadow = "0 4px 16px rgba(0, 0, 0, 0.2)";
+            popup.style.color = "#fff";
+            popup.style.fontFamily = "Arial, sans-serif";
+            popup.style.padding = "15px";
+            popup.style.zIndex = "100002";
+            popup.style.maxWidth = "300px";
+    
+            popup.innerHTML = `
+              <p style="margin: 0 0 10px; font-size: 14px;">Click the dropdown and select the 'Builder' option to proceed.</p>
+              <div style="display: flex; gap: 10px;">
+                <button id="campaign-close-btn" style="background: rgba(255,255,255,0.15); color: #fff; border: none; padding: 8px 16px; border-radius: 5px; cursor: pointer;">Close</button>
+              </div>
+            `;
+    
+            document.body.appendChild(popup);
+            this.campaignPopup = popup;
+    
+            const rect = element.getBoundingClientRect();
+            const popupWidth = 300;
+            const popupHeight = popup.offsetHeight || 150;
+            const margin = 10;
+            const viewportWidth = window.innerWidth;
+            const viewportHeight = window.innerHeight;
+    
+            let top = rect.top + window.scrollY;
+            let left = rect.right + margin;
+            let right = "auto";
+    
+            if (left + popupWidth > viewportWidth - margin) {
+              left = rect.left - popupWidth - margin;
+              right = "auto";
+              if (left < margin) {
+                left = rect.left;
+                top = rect.bottom + margin + window.scrollY;
+                if (top + popupHeight > viewportHeight + window.scrollY - margin) {
+                  top = rect.top - popupHeight - margin + window.scrollY;
+                }
+              }
+            }
+    
+            if (top < window.scrollY + margin) {
+              top = window.scrollY + margin;
+            } else if (top + popupHeight > window.scrollY + viewportHeight - margin) {
+              top = window.scrollY + viewportHeight - popupHeight - margin;
+            }
+    
+            popup.style.top = `${top}px`;
+            popup.style.left = left >= 0 ? `${left}px` : "auto";
+            popup.style.right = right;
+    
+            element.style.position = "relative";
+            element.style.zIndex = "100003";
+            element.style.boxShadow = "0 0 10px rgba(0, 0, 0, 0.5)";
+    
+            const closeBtn = popup.querySelector("#campaign-close-btn");
+            closeBtn.addEventListener("click", () => this.hideCampaignPopup());
+          }
+    
+          hideCampaignPopup() {
+            if (this.campaignPopup) {
+              const formBuilder = document.getElementById("tb_form-builder");
+              if (formBuilder) {
+                formBuilder.style.position = "";
+                formBuilder.style.zIndex = "";
+                formBuilder.style.boxShadow = "";
+              }
+              this.campaignPopup.remove();
+              this.campaignPopup = null;
+            }
+          }
+    
+          setupFormBuilderClickListener() {
+            const formBuilderMain = document.getElementById("tb-sub_form-builder-main");
+            if (formBuilderMain) {
+              const handler = () => {
+                this.hideCampaignPopup();
+                this.showFormBuilderPopup();
+                formBuilderMain.removeEventListener("click", handler); // Remove listener after firing
+              };
+              formBuilderMain.addEventListener("click", handler);
+            } else {
+              console.warn("Element with ID 'tb-sub_form-builder-main' not found. Waiting for it to appear.");
+              const observer = new MutationObserver(() => {
+                const formBuilderMainDynamic = document.getElementById("tb-sub_form-builder-main");
+                if (formBuilderMainDynamic) {
+                  const handler = () => {
+                    this.hideCampaignPopup();
+                    this.showFormBuilderPopup();
+                    formBuilderMainDynamic.removeEventListener("click", handler);
+                    observer.disconnect();
+                  };
+                  formBuilderMainDynamic.addEventListener("click", handler);
+                }
+              });
+              observer.observe(document.body, { childList: true, subtree: true });
+            }
+          }
+    
+          showFormBuilderPopup() {
+            if (this.formBuilderPopup) {
+              this.formBuilderPopup.remove();
+            }
+    
+            const popup = document.createElement("div");
+            popup.id = "form-builder-popup";
+            popup.style.position = "fixed";
+            popup.style.background = "linear-gradient(to bottom right, #28a745, #20c997)";
+            popup.style.borderRadius = "10px";
+            popup.style.boxShadow = "0 4px 16px rgba(0, 0, 0, 0.2)";
+            popup.style.color = "#fff";
+            popup.style.fontFamily = "Arial, sans-serif";
+            popup.style.padding = "15px";
+            popup.style.zIndex = "100002";
+            popup.style.maxWidth = "300px";
+            popup.style.top = "50%";
+            popup.style.left = "50%";
+            popup.style.transform = "translate(-50%, -50%)";
+    
+            popup.innerHTML = `
+              <p style="margin: 0 0 10px; font-size: 14px;">Search within the table for a form called 'Fundraising Creation Form' and continue with the campaign.</p>
+              <div style="display: flex; gap: 10px;">
+                <button id="form-builder-close-btn" style="background: rgba(255,255,255,0.15); color: #fff; border: none; padding: 8px 16px; border-radius: 5px; cursor: pointer;">Close</button>
+              </div>
+            `;
+    
+            document.body.appendChild(popup);
+            this.formBuilderPopup = popup;
+    
+            const closeBtn = popup.querySelector("#form-builder-close-btn");
+            closeBtn.addEventListener("click", () => this.hideFormBuilderPopup());
+          }
+    
+          hideFormBuilderPopup() {
+            if (this.formBuilderPopup) {
+              this.formBuilderPopup.remove();
+              this.formBuilderPopup = null;
+            }
+          }
+    
+          startTour() {
+            const savedStep = localStorage.getItem("tourCurrentStep");
+            const tourCompleted = localStorage.getItem("tourCompleted") === "true";
+    
+            if (tourCompleted) {
+              this.currentStep = 0;
+            } else if (savedStep !== null && !isNaN(savedStep) && savedStep >= 0 && savedStep < this.tourSteps.length) {
+              this.currentStep = parseInt(savedStep, 10);
+            } else {
+              this.currentStep = 0;
+            }
+    
+            this.createTourPopup();
+            this.hidePopup();
+            this.showTourStep(this.currentStep);
+          }
+    
+          createTourPopup() {
+            const popup = document.createElement("div");
+            popup.style.position = "fixed";
+            popup.style.background = "linear-gradient(to bottom right, #28a745, #20c997)";
+            popup.style.borderRadius = "10px";
+            popup.style.boxShadow = "0 4px 16px rgba(0, 0, 0, 0.2)";
+            popup.style.color = "#fff";
+            popup.style.fontFamily = "Arial, sans-serif";
+            popup.style.padding = "15px";
+            popup.style.zIndex = "100002";
+            popup.style.maxWidth = "300px";
+            document.body.appendChild(popup);
+            this.tourPopup = popup;
+          }
+    
+          updateTourPopup(element, step) {
+            this.tourPopup.innerHTML = `
+              <p style="margin: 0 0 10px; font-size: 14px;">${this.tourSteps[step].description}</p>
+              <div style="display: flex; gap: 10px;">
+                <button id="tour-next-btn" style="background: #fff; color: #28a745; border: none; padding: 8px 16px; border-radius: 5px; cursor: pointer;">${step < this.tourSteps.length - 1 ? 'Next' : 'Finish'}</button>
+                <button id="tour-end-btn" style="background: rgba(255,255,255,0.15); color: #fff; border: none; padding: 8px 16px; border-radius: 5px; cursor: pointer;">End Tour</button>
+              </div>
+            `;
+    
+            const rect = element.getBoundingClientRect();
+            const popupWidth = 300;
+            const popupHeight = this.tourPopup.offsetHeight || 150;
+            const margin = 10;
+            const viewportWidth = window.innerWidth;
+            const viewportHeight = window.innerHeight;
+    
+            let top = rect.top + window.scrollY;
+            let left = rect.right + margin;
+            let right = "auto";
+    
+            if (left + popupWidth > viewportWidth - margin) {
+              left = rect.left - popupWidth - margin;
+              right = "auto";
+              if (left < margin) {
+                left = rect.left;
+                top = rect.bottom + margin + window.scrollY;
+                if (top + popupHeight > viewportHeight + window.scrollY - margin) {
+                  top = rect.top - popupHeight - margin + window.scrollY;
+                }
+              }
+            }
+    
+            if (top < window.scrollY + margin) {
+              top = window.scrollY + margin;
+            } else if (top + popupHeight > window.scrollY + viewportHeight - margin) {
+              top = window.scrollY + viewportHeight - popupHeight - margin;
+            }
+    
+            this.tourPopup.style.top = `${top}px`;
+            this.tourPopup.style.left = left >= 0 ? `${left}px` : "auto";
+            this.tourPopup.style.right = right;
+    
+            element.style.position = "relative";
+            element.style.zIndex = "100003";
+            element.style.boxShadow = "0 0 10px rgba(0, 0, 0, 0.5)";
+          }
+    
+          showTourStep(step) {
+            if (step >= this.tourSteps.length) {
+              this.endTour(true);
+              return;
+            }
+    
+            const element = document.getElementById(this.tourSteps[step].elementId);
+            if (element) {
+              element.scrollIntoView({ behavior: "smooth", block: "center" });
+              this.updateTourPopup(element, step);
+    
+              const nextBtn = this.tourPopup.querySelector("#tour-next-btn");
+              const endBtn = this.tourPopup.querySelector("#tour-end-btn");
+    
+              if (nextBtn) {
+                nextBtn.addEventListener("click", () => {
+                  if (step < this.tourSteps.length - 1) {
+                    this.currentStep = step + 1;
+                    localStorage.setItem("tourCurrentStep", this.currentStep);
+                    this.showTourStep(this.currentStep);
+                  } else {
+                    this.endTour(true);
+                  }
+                });
+              }
+    
+              if (endBtn) {
+                endBtn.addEventListener("click", () => this.endTour(false));
+              }
+            } else {
+              console.warn(`Element with ID '${this.tourSteps[step].elementId}' not found, skipping to next step.`);
+              this.currentStep = step + 1;
+              localStorage.setItem("tourCurrentStep", this.currentStep);
+              this.showTourStep(this.currentStep);
+            }
+          }
+    
+          endTour(completed = false) {
+            if (this.tourPopup) {
+              this.tourPopup.remove();
+              this.tourPopup = null;
+            }
+            this.tourSteps.forEach(step => {
+              const element = document.getElementById(step.elementId);
+              if (element) {
+                element.style.position = "";
+                element.style.zIndex = "";
+                element.style.boxShadow = "";
+              }
+            });
+            localStorage.setItem("tourCompleted", completed);
+            if (!completed) {
+              localStorage.setItem("tourCurrentStep", this.currentStep);
+            } else {
+              localStorage.removeItem("tourCurrentStep");
+            }
+            this.currentStep = 0;
+          }
+        }
+    
+        new SupportPopup();
+        console.log("Support popup and tour initialized");
+      } catch (error) {
+        console.error("Error initializing support popup and tour:", error);
+      }
+    })();
+      </script>
