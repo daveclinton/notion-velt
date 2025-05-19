@@ -55,12 +55,14 @@ export const CommentSidebar: FC<CommentSidebarProps> = ({ documentId }) => {
   };
 
   const HeaderContent = () => (
-    <div className="flex items-center justify-between w-full">
-      {isOpen && (
-        <div onClick={toggleSidebar} className="cursor-pointer" role="button">
-          <ChevronsLeft className="h-6 w-6" />
-        </div>
-      )}
+    <div className="group flex items-center justify-between w-full">
+      <div
+        className="opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
+        onClick={toggleSidebar}
+        role="button"
+      >
+        <ChevronsLeft className="h-6 w-6" />
+      </div>
       <div className="flex items-center gap-2">
         <div className="bg-neutral-800 rounded-full h-8 w-8 flex items-center justify-center">
           <span className="text-sm">D</span>
