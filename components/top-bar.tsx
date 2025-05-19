@@ -2,11 +2,8 @@
 
 import { useParams } from "next/navigation";
 import { MenuIcon } from "lucide-react";
-
 import { Banner } from "./banner";
-import { Menu } from "./menu";
 import { Title } from "./title";
-import { Publish } from "./publish";
 
 interface NavbarProps {
   isCollapsed: boolean;
@@ -24,7 +21,6 @@ interface StaticDocument {
 export const TopNavbar = ({ isCollapsed, onResetWidth }: NavbarProps) => {
   const params = useParams();
 
-  // Static dummy document for UI rendering
   const document: StaticDocument = {
     _id: (params.documentId as string) || "1",
     title: "Sample Document",
@@ -35,7 +31,7 @@ export const TopNavbar = ({ isCollapsed, onResetWidth }: NavbarProps) => {
 
   return (
     <>
-      <nav className="bg-background dark:bg-[#1F1F1F] px-3 py-2 w-full flex items-center gap-x-4">
+      <nav className=" px-3 py-2 w-full flex items-center gap-x-4">
         {isCollapsed && (
           <MenuIcon
             role="button"
@@ -45,10 +41,6 @@ export const TopNavbar = ({ isCollapsed, onResetWidth }: NavbarProps) => {
         )}
         <div className="flex items-center justify-between w-full">
           <Title initialData={document} />
-          <div className="flex items-center gap-x-2">
-            <Publish initialData={document} />
-            <Menu documentId={document._id} />
-          </div>
         </div>
       </nav>
       {document.isArchived && <Banner documentId={document._id} />}

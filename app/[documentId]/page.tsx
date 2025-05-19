@@ -1,11 +1,11 @@
 import DocumentPage from "@/components/editor/document";
 import { findPageById, pageTree } from "@/lib/mock-data";
 
-type Params = Promise<{ pageId: string }>;
+type Params = Promise<{ documentId: string }>;
 
 export default async function Page({ params }: { params: Params }) {
-  const { pageId } = await params;
-  const currentPage = findPageById(pageId, pageTree);
+  const { documentId } = await params;
+  const currentPage = findPageById(documentId, pageTree);
   console.log(currentPage);
   return (
     <div className="h-full">
