@@ -29,7 +29,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning className="h-full">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased h-full dark`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased h-full`}
       >
         <ThemeProvider attribute="class" disableTransitionOnChange>
           <VeltWrapper>

@@ -33,7 +33,10 @@ export const IconPicker = ({
   return (
     <Popover>
       <PopoverTrigger asChild={asChild}>{children}</PopoverTrigger>
-      <PopoverContent className="p-0 w-full border-none shadow-none">
+      <PopoverContent
+        style={{ zIndex: 999999 }}
+        className="p-0 w-full  border-none shadow-none"
+      >
         <EmojiPIcker
           height={350}
           theme={theme}

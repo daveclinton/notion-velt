@@ -117,13 +117,13 @@ export const Toolbar = ({ initialData, preview }: ToolbarProps) => {
       </div>
       <div className="flex items-center gap-x-2 pt-6">
         {!!icon && !preview && (
-          <div className="flex items-center gap-x-2 group/icon">
+          <div className="relative flex items-center group/icon">
             <IconPicker onChange={onIconSelect}>
               <p className="text-6xl hover:opacity-75 transition">{icon}</p>
             </IconPicker>
             <Button
               onClick={onRemoveIcon}
-              className="rounded-full cursor-pointer opacity-0 group-hover/icon:opacity-100 transition text-muted-foreground text-xs"
+              className="absolute -top-2 -right-2 rounded-full cursor-pointer opacity-0 group-hover/icon:opacity-100 transition text-muted-foreground text-xs"
               variant="outline"
               size="icon"
             >
@@ -141,7 +141,7 @@ export const Toolbar = ({ initialData, preview }: ToolbarProps) => {
             value={title}
             onChange={(e) => onInput(e.target.value)}
             className="text-5xl bg-transparent font-bold break-words
-              outline-none text-[#3F3F3F] dark:text-[#CFCFCF] resize-none"
+        outline-none text-[#3F3F3F] dark:text-[#CFCFCF] resize-none"
           />
         ) : (
           <div
