@@ -9,8 +9,8 @@ import {
   Send,
   Star,
   MoreHorizontal,
-  ChevronLeft,
-  ChevronRight,
+  MessageSquareText,
+  ChevronsLeft,
 } from "lucide-react";
 
 interface Comment {
@@ -54,25 +54,49 @@ export const CommentSidebar: FC<CommentSidebarProps> = ({ documentId }) => {
     setIsOpen((prev) => !prev);
   };
 
+  const HeaderContent = () => (
+    <div className="flex items-center justify-between w-full">
+      {isOpen && (
+        <div onClick={toggleSidebar} className="cursor-pointer" role="button">
+          <ChevronsLeft className="h-6 w-6" />
+        </div>
+      )}
+      <div className="flex items-center gap-2">
+        <div className="bg-neutral-800 rounded-full h-8 w-8 flex items-center justify-center">
+          <span className="text-sm">D</span>
+        </div>
+        <button className="flex items-center gap-2 hover:bg-neutral-800 px-2 py-1 rounded cursor-pointer">
+          <span>Share</span>
+        </button>
+      </div>
+      <div className="flex items-center gap-3">
+        <button
+          onClick={toggleSidebar}
+          className="p-1 hover:bg-neutral-800 cursor-pointer rounded"
+        >
+          <MessageSquareText size={20} />
+        </button>
+        <button className="p-1 hover:bg-neutral-800 cursor-pointer rounded">
+          <Star size={20} />
+        </button>
+        <button className="p-1 hover:bg-neutral-800 cursor-pointer rounded">
+          <MoreHorizontal size={20} />
+        </button>
+      </div>
+    </div>
+  );
+
   return (
     <>
       <div
         className={cn(
-          "fixed right-0 top-20 bg-neutral-900 text-white border-l border-t border-b border-neutral-700 rounded-l-md p-2 cursor-pointer transition-all duration-300 z-40",
-          isOpen && "opacity-0 pointer-events-none"
+          "fixed top-0 right-0 p-4   text-white z-30 transition-all duration-300",
+          isOpen ? "opacity-0 pointer-events-none" : "opacity-100"
         )}
-        onClick={toggleSidebar}
       >
-        <div className="flex flex-col items-center gap-1">
-          <MessageSquare size={20} />
-          <span className="text-xs font-medium">Comments</span>
-          <div className="flex items-center justify-center">
-            <ChevronLeft size={16} />
-          </div>
-        </div>
+        <HeaderContent />
       </div>
 
-      {/* Sidebar */}
       <div
         ref={sidebarRef}
         className={cn(
@@ -80,33 +104,10 @@ export const CommentSidebar: FC<CommentSidebarProps> = ({ documentId }) => {
           !isOpen && "translate-x-full"
         )}
       >
-        {/* Header */}
         <div className="flex items-center justify-between p-4 border-b border-neutral-700">
-          <div className="flex items-center gap-2">
-            <div className="bg-neutral-800 rounded-full h-8 w-8 flex items-center justify-center">
-              <span className="text-sm">D</span>
-            </div>
-            <button className="flex items-center gap-2 hover:bg-neutral-800 px-2 py-1 rounded">
-              <span>Share</span>
-            </button>
-          </div>
-          <div className="flex items-center gap-3">
-            <button className="p-1 hover:bg-neutral-800 rounded">
-              <MessageSquare size={20} />
-            </button>
-            <button className="p-1 hover:bg-neutral-800 rounded">
-              <Star size={20} />
-            </button>
-            <button
-              className="p-1 hover:bg-neutral-800 rounded"
-              onClick={toggleSidebar}
-            >
-              <ChevronRight size={20} />
-            </button>
-          </div>
+          <HeaderContent />
         </div>
 
-        {/* Comments header */}
         <div className="flex items-center justify-between p-4 border-b border-neutral-700">
           <h2 className="font-medium">Comments & suggestions</h2>
           <button className="p-1 hover:bg-neutral-800 rounded">
@@ -114,7 +115,6 @@ export const CommentSidebar: FC<CommentSidebarProps> = ({ documentId }) => {
           </button>
         </div>
 
-        {/* Notification settings */}
         <div className="p-4 border-b border-neutral-700">
           <p className="text-sm text-neutral-400 mb-2">Notify me for</p>
           <button className="w-full flex items-center justify-between p-2 bg-neutral-800 rounded hover:bg-neutral-700">
@@ -130,7 +130,6 @@ export const CommentSidebar: FC<CommentSidebarProps> = ({ documentId }) => {
           </button>
         </div>
 
-        {/* Comments area */}
         <div className="flex-1 overflow-y-auto p-4">
           {comments.length === 0 ? (
             <div className="h-full flex flex-col items-center justify-center text-neutral-400">
