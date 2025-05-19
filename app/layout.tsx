@@ -1,11 +1,10 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
-import { AppSidebar } from "@/components/app-sidebar";
-import { AppProvider } from "@/lib/context/app-context";
 import { VeltWrapper } from "@/lib/context/velt-wrapper";
 import { ThemeProvider } from "@/components/theme-provider";
+import { Navigation } from "@/components/navigation";
+import { SearchCommand } from "@/components/search-command";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -38,18 +37,13 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <VeltWrapper>
-            <AppProvider>
-              <SidebarProvider>
-                <AppSidebar variant="inset" />
-                <SidebarInset>
-                  <div className="flex flex-1 flex-col">
-                    <div className="@container/main flex flex-1 flex-col gap-2">
-                      {children}
-                    </div>
-                  </div>
-                </SidebarInset>
-              </SidebarProvider>
-            </AppProvider>
+            <div className="h-full flex dark:bg-[#1F1F1F]">
+              <Navigation />
+              <main className="flex-1 h-full overflow-y-auto">
+                <SearchCommand />
+                {children}
+              </main>
+            </div>
           </VeltWrapper>
         </ThemeProvider>
       </body>
