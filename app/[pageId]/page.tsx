@@ -1,4 +1,4 @@
-import DocumentPage from "@/components/editor/editor";
+import DocumentPage from "@/components/editor/document";
 import { findPageById, pageTree } from "@/lib/mock-data";
 
 type Params = Promise<{ pageId: string }>;
