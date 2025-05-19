@@ -6,7 +6,7 @@ type Params = Promise<{ documentId: string }>;
 export default async function Page({ params }: { params: Params }) {
   const { documentId } = await params;
   const currentPage = findPageById(documentId, pageTree);
-  console.log(currentPage);
+  console.debug(currentPage);
   return (
     <div className="h-full">
       <DocumentPage />
