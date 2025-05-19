@@ -1,17 +1,36 @@
-import { create } from "zustand";
+"use client";
 
-type CoverImageStore = {
-  url?: string;
-  isOpen: boolean;
-  onOpen: () => void;
-  onClose: () => void;
-  onReplace: (url: string) => void;
+import { useState } from "react";
+import { useDocumentStore } from "./use-document";
+
+export const useCoverImage = () => {
+  const [isOpen, setIsOpen] = useState(false);
+  const { document, updateDocument } = useDocumentStore();
+
+  const onOpen = () => {
+    setIsOpen(true);
+  };
+
+  const onClose = () => {
+    setIsOpen(false);
+  };
+
+  const onSelect = (imageUrl: string) => {
+    updateDocument({
+      initialData: {
+        ...document?.initialData,
+        title: document?.initialData.title || "Untitled",
+        icon: document?.initialData.icon,
+        coverImage: imageUrl,
+      },
+    });
+    setIsOpen(false);
+  };
+
+  return {
+    isOpen,
+    onOpen,
+    onClose,
+    onSelect,
+  };
 };
-
-export const useCoverImage = create<CoverImageStore>((set) => ({
-  url: undefined,
-  isOpen: false,
-  onOpen: () => set({ isOpen: true, url: undefined }),
-  onClose: () => set({ isOpen: false, url: undefined }),
-  onReplace: (url: string) => set({ isOpen: true, url }),
-}));
