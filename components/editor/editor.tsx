@@ -6,11 +6,9 @@ import { TipTapEditor } from "./tiptap-editor";
 import { EditorToolbar } from "./editor-toolbar";
 import { Skeleton } from "@/components/ui/skeleton";
 import { PageHeader } from "./page-header";
-import { VeltSidebarButton } from "@veltdev/react";
-import { useSidebar } from "../ui/sidebar";
+import { MessageSquareMore, MoreHorizontal, Star } from "lucide-react";
 import { Button } from "../ui/button";
-import { cn } from "@/lib/utils";
-import { ChevronsLeft, ChevronsRight } from "lucide-react";
+import CommentsSidebar from "../comment-sidebar";
 
 export function Editor({
   currentPageId,
@@ -22,8 +20,8 @@ export function Editor({
   const [blocks, setBlocks] = useState<Block[]>(
     pageBlocks[currentPageId] || []
   );
-  const { state, toggleSidebar } = useSidebar();
   const [focusedBlockId, setFocusedBlockId] = useState<string | null>(null);
+  const [isOpen, setIsOpen] = useState(false);
 
   if (!currentPageId || !currentPage) {
     return (
@@ -80,30 +78,31 @@ export function Editor({
   };
 
   return (
-    <div className="flex-1 p-6 overflow-auto bg-accent relative">
-      <Button
-        data-sidebar="trigger"
-        data-slot="sidebar-trigger"
-        variant="ghost"
-        size="icon"
-        className={cn("size-9")}
-        onClick={() => {
-          toggleSidebar();
-        }}
-      >
-        {state === "expanded" ? (
-          <ChevronsLeft size={40} />
-        ) : (
-          <ChevronsRight size={40} />
-        )}
-        <span className="sr-only">Toggle Sidebar</span>
-      </Button>
-      <div className="absolute top-6 right-6 -mr-1">
-        <div className="toolbar">
-          <VeltSidebarButton />
+    <div className="flex-1 overflow-auto bg-accent relative">
+      <div className="flex absolute right-6 gap-3 top-1 items-center justify-between border-b border-zinc-800">
+        <div className="flex items-center gap-2">
+          <div className="flex -space-x-2">
+            <div className="h-6 w-6 outline-solid rounded-full bg-zinc-700 flex items-center justify-center text-white">
+              D
+            </div>
+            <div className="h-6 w-6 outline-solid rounded-full bg-zinc-700 flex items-center justify-center text-white">
+              J
+            </div>
+          </div>
         </div>
+        <span className="text-sm font-medium ml-2">Share</span>
+        <Button
+          variant="ghost"
+          className="cursor-pointer"
+          onClick={() => setIsOpen(true)}
+        >
+          <MessageSquareMore className="h-6 w-6" />
+        </Button>
+        <Star className="h-6 w-6" />
+        <MoreHorizontal className="h-6 w-6" />
       </div>
-      <div className="max-w-3xl mx-auto">
+      <CommentsSidebar open={isOpen} onOpenChange={setIsOpen} />
+      <div className="max-w-3xl p-6 mx-auto">
         <PageHeader page={currentPage} />
         {blocks.map((block, index) => (
           <TipTapEditor
