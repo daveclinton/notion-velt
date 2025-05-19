@@ -96,7 +96,7 @@ const filterPages = (
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const [currentUser, setCurrentUser] = useState(dummyUsers[0]);
-  const [searchQuery, setSearchQuery] = useState(""); // State for search input
+  const [searchQuery, setSearchQuery] = useState("");
 
   useIdentify(
     {
