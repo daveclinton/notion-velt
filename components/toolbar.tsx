@@ -90,6 +90,31 @@ export const Toolbar = ({ initialData, preview }: ToolbarProps) => {
 
   return (
     <div className="pl-[54px] group relative">
+      <div className="opacity-0 group-hover:opacity-100 flex items-center gap-x-1 py-4">
+        {!icon && !preview && (
+          <IconPicker asChild onChange={onIconSelect}>
+            <Button
+              className="text-muted-foreground text-xs cursor-pointer"
+              variant="outline"
+              size="sm"
+            >
+              <Smile className="h-4 w-4 mr-2" />
+              Add icon
+            </Button>
+          </IconPicker>
+        )}
+        {!initialData.initialData.coverImage && !preview && (
+          <Button
+            onClick={coverImage.onOpen}
+            className="text-muted-foreground cursor-pointer"
+            variant="outline"
+            size="sm"
+          >
+            <ImageIcon className="h-4 w-4 mr-2" />
+            Add cover
+          </Button>
+        )}
+      </div>
       <div className="flex items-center gap-x-2 pt-6">
         {!!icon && !preview && (
           <div className="flex items-center gap-x-2 group/icon">
@@ -98,7 +123,7 @@ export const Toolbar = ({ initialData, preview }: ToolbarProps) => {
             </IconPicker>
             <Button
               onClick={onRemoveIcon}
-              className="rounded-full opacity-0 group-hover/icon:opacity-100 transition text-muted-foreground text-xs"
+              className="rounded-full cursor-pointer opacity-0 group-hover/icon:opacity-100 transition text-muted-foreground text-xs"
               variant="outline"
               size="icon"
             >
@@ -125,32 +150,6 @@ export const Toolbar = ({ initialData, preview }: ToolbarProps) => {
           >
             {title}
           </div>
-        )}
-      </div>
-
-      <div className="opacity-0 group-hover:opacity-100 flex items-center gap-x-1 py-4">
-        {!icon && !preview && (
-          <IconPicker asChild onChange={onIconSelect}>
-            <Button
-              className="text-muted-foreground text-xs"
-              variant="outline"
-              size="sm"
-            >
-              <Smile className="h-4 w-4 mr-2" />
-              Add icon
-            </Button>
-          </IconPicker>
-        )}
-        {!initialData.initialData.coverImage && !preview && (
-          <Button
-            onClick={coverImage.onOpen}
-            className="text-muted-foreground"
-            variant="outline"
-            size="sm"
-          >
-            <ImageIcon className="h-4 w-4 mr-2" />
-            Add cover
-          </Button>
         )}
       </div>
     </div>

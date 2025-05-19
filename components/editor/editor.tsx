@@ -15,7 +15,7 @@ interface EditorProps {
 
 const Editor = ({ onChange, initialContent, editable }: EditorProps) => {
   const { resolvedTheme } = useTheme();
-
+  console.log(resolvedTheme);
   const editor: BlockNoteEditor = useCreateBlockNote({
     initialContent: initialContent
       ? (JSON.parse(initialContent) as PartialBlock[])

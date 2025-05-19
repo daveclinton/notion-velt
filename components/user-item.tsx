@@ -1,5 +1,4 @@
 "use client";
-
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
@@ -12,7 +11,6 @@ import { ChevronsLeftRight } from "lucide-react";
 import { toast } from "sonner";
 
 export const UserItem = () => {
-  // Static dummy user
   const user = {
     fullName: "John Doe",
     emailAddress: "john.doe@example.com",
@@ -46,6 +44,7 @@ export const UserItem = () => {
         align="start"
         alignOffset={11}
         forceMount
+        style={{ zIndex: 999999 }}
       >
         <div className="flex flex-col space-y-4 p-2">
           <p className="text-xs font-medium leading-none text-muted-foreground">
