@@ -1,89 +1,207 @@
-import { Bell, ChevronDown, ListFilter } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Sheet, SheetContent } from "@/components/ui/sheet";
+"use client";
 
-interface CommentsSidebarProps {
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
+import { useState, useRef, FC } from "react";
+import { cn } from "@/lib/utils";
+import {
+  Bell,
+  ChevronDown,
+  MessageSquare,
+  Send,
+  Star,
+  MoreHorizontal,
+  ChevronLeft,
+  ChevronRight,
+} from "lucide-react";
+
+interface Comment {
+  id: number;
+  text: string;
+  user: string;
+  timestamp: Date;
 }
 
-export default function CommentsSidebar({
-  open,
-  onOpenChange,
-}: CommentsSidebarProps) {
+interface CommentSidebarProps {
+  documentId: string;
+}
+
+export const CommentSidebar: FC<CommentSidebarProps> = ({ documentId }) => {
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [notifications, setNotifications] = useState<
+    "all" | "mentions" | "none"
+  >("all");
+  const [commentText, setCommentText] = useState<string>("");
+  const [comments, setComments] = useState<Comment[]>([]);
+  const sidebarRef = useRef<HTMLDivElement | null>(null);
+
+  const handleAddComment = (): void => {
+    if (commentText.trim()) {
+      setComments([
+        ...comments,
+        {
+          id: Date.now(),
+          text: commentText,
+          user: "You",
+          timestamp: new Date(),
+        },
+      ]);
+      setCommentText("");
+      setNotifications("all");
+      console.log(documentId);
+    }
+  };
+
+  const toggleSidebar = (): void => {
+    setIsOpen((prev) => !prev);
+  };
+
   return (
-    <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent
-        side="right"
-        className="w-[400px] sm:w-[540px] p-0 pt-12 bg-zinc-900 text-white border-l border-zinc-800"
+    <>
+      <div
+        className={cn(
+          "fixed right-0 top-20 bg-neutral-900 text-white border-l border-t border-b border-neutral-700 rounded-l-md p-2 cursor-pointer transition-all duration-300 z-40",
+          isOpen && "opacity-0 pointer-events-none"
+        )}
+        onClick={toggleSidebar}
       >
-        <div className="flex flex-col h-full">
-          <div className="flex-1 overflow-auto">
-            <div className="p-4">
-              <div className="flex items-center justify-between">
-                <h3 className="text-sm font-medium">Comments & suggestions</h3>
-                <Button variant="ghost" size="icon" className="h-8 w-8">
-                  <span className="sr-only">Filter</span>
-                  <ListFilter />
-                </Button>
-              </div>
-
-              <div className="mt-6">
-                <p className="text-sm text-zinc-400">Notify me for</p>
-                <div className="mt-2 relative">
-                  <Select defaultValue="all">
-                    <SelectTrigger className="w-full bg-transparent border-zinc-700 text-white h-12 rounded-md">
-                      <div className="flex items-center">
-                        <Bell className="h-5 w-5 mr-2 text-zinc-400" />
-                        <SelectValue placeholder="All comments" />
-                      </div>
-                      <ChevronDown className="h-5 w-5 text-zinc-400" />
-                    </SelectTrigger>
-                    <SelectContent className="bg-zinc-800 border-zinc-700 text-white">
-                      <SelectItem value="all">All comments</SelectItem>
-                      <SelectItem value="mentions">Mentions only</SelectItem>
-                      <SelectItem value="none">None</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-              </div>
-
-              <div className="mt-20 flex flex-col items-center justify-center gap-4 text-center">
-                <div className="flex h-24 w-24 items-center justify-center">
-                  <svg
-                    width="64"
-                    height="64"
-                    viewBox="0 0 64 64"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M22 42H14C8.47715 42 4 37.5228 4 32V22C4 16.4772 8.47715 12 14 12H34C39.5228 12 44 16.4772 44 22V24M30 52H50C55.5228 52 60 47.5228 60 42V32C60 26.4772 55.5228 22 50 22H30C24.4772 22 20 26.4772 20 32V42C20 47.5228 24.4772 52 30 52Z"
-                      stroke="#4B5563"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                  </svg>
-                </div>
-                <p className="text-lg text-zinc-400">
-                  No open comments or suggestions
-                </p>
-                <Button className="mt-2 bg-transparent border border-zinc-700 hover:bg-zinc-800 text-white rounded-md px-6 py-2">
-                  Add comment
-                </Button>
-              </div>
-            </div>
+        <div className="flex flex-col items-center gap-1">
+          <MessageSquare size={20} />
+          <span className="text-xs font-medium">Comments</span>
+          <div className="flex items-center justify-center">
+            <ChevronLeft size={16} />
           </div>
         </div>
-      </SheetContent>
-    </Sheet>
+      </div>
+
+      {/* Sidebar */}
+      <div
+        ref={sidebarRef}
+        className={cn(
+          "fixed right-0 top-0 h-screen w-80 bg-neutral-900 text-white border-l border-neutral-700 flex flex-col z-50 transition-all duration-300",
+          !isOpen && "translate-x-full"
+        )}
+      >
+        {/* Header */}
+        <div className="flex items-center justify-between p-4 border-b border-neutral-700">
+          <div className="flex items-center gap-2">
+            <div className="bg-neutral-800 rounded-full h-8 w-8 flex items-center justify-center">
+              <span className="text-sm">D</span>
+            </div>
+            <button className="flex items-center gap-2 hover:bg-neutral-800 px-2 py-1 rounded">
+              <span>Share</span>
+            </button>
+          </div>
+          <div className="flex items-center gap-3">
+            <button className="p-1 hover:bg-neutral-800 rounded">
+              <MessageSquare size={20} />
+            </button>
+            <button className="p-1 hover:bg-neutral-800 rounded">
+              <Star size={20} />
+            </button>
+            <button
+              className="p-1 hover:bg-neutral-800 rounded"
+              onClick={toggleSidebar}
+            >
+              <ChevronRight size={20} />
+            </button>
+          </div>
+        </div>
+
+        {/* Comments header */}
+        <div className="flex items-center justify-between p-4 border-b border-neutral-700">
+          <h2 className="font-medium">Comments & suggestions</h2>
+          <button className="p-1 hover:bg-neutral-800 rounded">
+            <MoreHorizontal size={20} />
+          </button>
+        </div>
+
+        {/* Notification settings */}
+        <div className="p-4 border-b border-neutral-700">
+          <p className="text-sm text-neutral-400 mb-2">Notify me for</p>
+          <button className="w-full flex items-center justify-between p-2 bg-neutral-800 rounded hover:bg-neutral-700">
+            <div className="flex items-center gap-2">
+              <Bell size={18} />
+              <span>
+                {notifications === "all" && "All comments"}
+                {notifications === "mentions" && "Mentions only"}
+                {notifications === "none" && "No notifications"}
+              </span>
+            </div>
+            <ChevronDown size={18} />
+          </button>
+        </div>
+
+        {/* Comments area */}
+        <div className="flex-1 overflow-y-auto p-4">
+          {comments.length === 0 ? (
+            <div className="h-full flex flex-col items-center justify-center text-neutral-400">
+              <div className="mb-4 p-3 border-2 border-neutral-700 rounded-lg">
+                <MessageSquare size={32} />
+              </div>
+              <p className="text-center mb-6">
+                No open comments or suggestions
+              </p>
+              <button
+                className="px-4 py-2 border border-neutral-600 rounded-md hover:bg-neutral-800"
+                onClick={() =>
+                  document.getElementById("comment-input")?.focus()
+                }
+              >
+                Add comment
+              </button>
+            </div>
+          ) : (
+            <div className="space-y-4">
+              {comments.map((comment: Comment) => (
+                <div key={comment.id} className="bg-neutral-800 p-3 rounded-lg">
+                  <div className="flex items-center gap-2 mb-1">
+                    <span className="font-medium">{comment.user}</span>
+                    <span className="text-xs text-neutral-400">
+                      {comment.timestamp.toLocaleTimeString([], {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })}
+                    </span>
+                  </div>
+                  <p>{comment.text}</p>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
+        <div className="p-4 border-t border-neutral-700">
+          <div className="bg-neutral-800 rounded-lg flex items-center p-2">
+            <input
+              id="comment-input"
+              type="text"
+              placeholder="Add a comment..."
+              className="flex-1 bg-transparent outline-none text-sm"
+              value={commentText}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                setCommentText(e.target.value)
+              }
+              onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
+                if (e.key === "Enter" && !e.shiftKey) {
+                  e.preventDefault();
+                  handleAddComment();
+                }
+              }}
+            />
+            <button
+              className={cn(
+                "p-1 rounded-full",
+                commentText.trim()
+                  ? "text-blue-400 hover:bg-neutral-700"
+                  : "text-neutral-500"
+              )}
+              disabled={!commentText.trim()}
+              onClick={handleAddComment}
+            >
+              <Send size={18} />
+            </button>
+          </div>
+        </div>
+      </div>
+    </>
   );
-}
+};

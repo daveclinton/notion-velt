@@ -5,6 +5,7 @@ import { useMemo, useState } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Toolbar } from "../toolbar";
 import { Cover } from "../cover";
+import { CommentSidebar } from "../comment-sidebar";
 
 const dummyDocument = {
   title: "Sample Document",
@@ -72,6 +73,7 @@ const DocumentPage = () => {
           initialContent={document.content}
         />
       </div>
+      <CommentSidebar documentId="doc123" />
     </div>
   );
 };
