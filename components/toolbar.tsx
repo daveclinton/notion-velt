@@ -1,27 +1,39 @@
 "use client";
 
 import { useCoverImage } from "@/hooks/use-cover-image";
-
 import { Button } from "./ui/button";
 import { ImageIcon, Smile, X } from "lucide-react";
 import { ElementRef, useRef, useState } from "react";
 import TextareaAutosize from "react-textarea-autosize";
 import { IconPicker } from "./icon-picker";
+import { useDocumentStore } from "@/hooks/use-document";
 
-interface ToolbarProps {
+interface StaticDocument {
+  _id: string;
+  isArchived: boolean;
+  isPublished: boolean;
   initialData: {
     title: string;
     icon?: string;
     coverImage?: string;
   };
   preview?: boolean;
+  content?: string;
+}
+
+interface ToolbarProps {
+  initialData: StaticDocument;
+  preview?: boolean;
 }
 
 export const Toolbar = ({ initialData, preview }: ToolbarProps) => {
   const inputRef = useRef<ElementRef<"textarea">>(null);
   const [isEditing, setIsEditing] = useState(false);
-  const [value, setValue] = useState(initialData.title);
-  const [icon, setIcon] = useState(initialData.icon);
+  const { document, updateDocument } = useDocumentStore();
+
+  const title =
+    document?.initialData.title || initialData.initialData.title || "Untitled";
+  const icon = document?.initialData.icon ?? initialData.initialData.icon;
 
   const coverImage = useCoverImage();
 
@@ -30,7 +42,6 @@ export const Toolbar = ({ initialData, preview }: ToolbarProps) => {
 
     setIsEditing(true);
     setTimeout(() => {
-      setValue(initialData.title);
       inputRef.current?.focus();
     }, 0);
   };
@@ -38,7 +49,14 @@ export const Toolbar = ({ initialData, preview }: ToolbarProps) => {
   const disableInput = () => setIsEditing(false);
 
   const onInput = (value: string) => {
-    setValue(value);
+    updateDocument({
+      initialData: {
+        ...document?.initialData,
+        title: value || "Untitled",
+        icon: document?.initialData.icon,
+        coverImage: document?.initialData.coverImage,
+      },
+    });
   };
 
   const onKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
@@ -49,37 +67,72 @@ export const Toolbar = ({ initialData, preview }: ToolbarProps) => {
   };
 
   const onIconSelect = (icon: string) => {
-    setIcon(icon);
+    updateDocument({
+      initialData: {
+        ...document?.initialData,
+        title: document?.initialData.title || "Untitled",
+        icon,
+        coverImage: document?.initialData.coverImage,
+      },
+    });
   };
 
   const onRemoveIcon = () => {
-    setIcon(undefined);
+    updateDocument({
+      initialData: {
+        ...document?.initialData,
+        title: document?.initialData.title || "Untitled",
+        icon: undefined,
+        coverImage: document?.initialData.coverImage,
+      },
+    });
   };
 
   return (
     <div className="pl-[54px] group relative">
-      {!!icon && !preview && (
-        <div className="flex items-center gap-x-2 group/icon pt-6">
-          <IconPicker onChange={onIconSelect}>
-            <p className="text-6xl hover:opacity-75 transition">{icon}</p>
-          </IconPicker>
-          <Button
-            onClick={onRemoveIcon}
-            className="rounded-full opacity-0 group-hover/icon:opacity-100 transition text-muted-foreground text-xs"
-            variant="outline"
-            size="icon"
+      <div className="flex items-center gap-x-2 pt-6">
+        {!!icon && !preview && (
+          <div className="flex items-center gap-x-2 group/icon">
+            <IconPicker onChange={onIconSelect}>
+              <p className="text-6xl hover:opacity-75 transition">{icon}</p>
+            </IconPicker>
+            <Button
+              onClick={onRemoveIcon}
+              className="rounded-full opacity-0 group-hover/icon:opacity-100 transition text-muted-foreground text-xs"
+              variant="outline"
+              size="icon"
+            >
+              <X className="h-4 w-4" />
+            </Button>
+          </div>
+        )}
+        {!!icon && preview && <p className="text-6xl">{icon}</p>}
+
+        {isEditing && !preview ? (
+          <TextareaAutosize
+            ref={inputRef}
+            onBlur={disableInput}
+            onKeyDown={onKeyDown}
+            value={title}
+            onChange={(e) => onInput(e.target.value)}
+            className="text-5xl bg-transparent font-bold break-words
+              outline-none text-[#3F3F3F] dark:text-[#CFCFCF] resize-none"
+          />
+        ) : (
+          <div
+            onClick={enableInput}
+            className="pb-[11.5px] text-5xl font-bold break-words outline-none text-[#3F3F3F] dark:text-[#CFCFCF]"
           >
-            <X className="h-4 w-4" />
-          </Button>
-        </div>
-      )}
-      {!!icon && preview && <p className="text-6xl pt-6">{icon}</p>}
+            {title}
+          </div>
+        )}
+      </div>
 
       <div className="opacity-0 group-hover:opacity-100 flex items-center gap-x-1 py-4">
         {!icon && !preview && (
           <IconPicker asChild onChange={onIconSelect}>
             <Button
-              className="to-muted-foreground text-xs"
+              className="text-muted-foreground text-xs"
               variant="outline"
               size="sm"
             >
@@ -88,7 +141,7 @@ export const Toolbar = ({ initialData, preview }: ToolbarProps) => {
             </Button>
           </IconPicker>
         )}
-        {!initialData.coverImage && !preview && (
+        {!initialData.initialData.coverImage && !preview && (
           <Button
             onClick={coverImage.onOpen}
             className="text-muted-foreground"
@@ -100,25 +153,6 @@ export const Toolbar = ({ initialData, preview }: ToolbarProps) => {
           </Button>
         )}
       </div>
-
-      {isEditing && !preview ? (
-        <TextareaAutosize
-          ref={inputRef}
-          onBlur={disableInput}
-          onKeyDown={onKeyDown}
-          value={value}
-          onChange={(e) => onInput(e.target.value)}
-          className="text-5xl bg-transparent font-bold break-words
-            outline-none text-[#3F3F3F] dark:text-[#CFCFCF] resize-none"
-        />
-      ) : (
-        <div
-          onClick={enableInput}
-          className="pb-[11.5px] text-5xl font-bold break-words outline-none text-[#3F3F3F] dark:text-[#CFCFCF]"
-        >
-          {value}
-        </div>
-      )}
     </div>
   );
 };

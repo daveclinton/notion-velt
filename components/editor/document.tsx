@@ -1,34 +1,14 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { useMemo, useState } from "react";
+import { useMemo, useEffect } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Toolbar } from "../toolbar";
 import { Cover } from "../cover";
 import { CommentSidebar } from "../comment-sidebar";
 
-const dummyDocument = {
-  title: "Sample Document",
-  content: JSON.stringify(
-    [
-      {
-        id: "block1",
-        type: "paragraph",
-        props: {
-          textColor: "default",
-          backgroundColor: "default",
-          textAlignment: "left",
-        },
-        content: [
-          { type: "text", text: "Welcome to the sample document!", styles: {} },
-        ],
-        children: [],
-      },
-    ],
-    null,
-    2
-  ),
-};
+import { useParams } from "next/navigation";
+import { useDocumentStore } from "@/hooks/use-document";
 
 const DocumentPage = () => {
   const EditorComponent = useMemo(
@@ -36,44 +16,47 @@ const DocumentPage = () => {
     []
   );
 
-  const [document, setDocument] = useState(dummyDocument);
-  const [isLoading] = useState(false);
+  const { document, setDocument } = useDocumentStore();
+  const params = useParams();
+
+  useEffect(() => {
+    const documentId = params.documentId as string;
+    if (documentId) {
+      setDocument(documentId);
+    }
+  }, [params.documentId, setDocument]);
 
   const onChange = (content: string) => {
-    setDocument((prev) => ({ ...prev, content }));
+    useDocumentStore.getState().updateDocument({ content });
     console.log("Updated content:", content);
   };
 
-  if (isLoading) {
+  if (!document) {
     return (
       <div>
         <div className="md:max-w-3xl lg:max-w-4xl mx-auto mt-10">
           <div className="space-y-4 pl-8 pt-4">
-            <Skeleton className="h4 w-[50%]" />
-            <Skeleton className="h4 w-[80%]" />
-            <Skeleton className="h4 w-[40%]" />
-            <Skeleton className="h4 w-[60%]" />
+            <Skeleton className="h-4 w-[50%]" />
+            <Skeleton className="h-4 w-[80%]" />
+            <Skeleton className="h-4 w-[40%]" />
+            <Skeleton className="h-4 w-[60%]" />
           </div>
         </div>
       </div>
     );
   }
 
-  if (!document) {
-    return <div className="p-4">Document not found</div>;
-  }
-
   return (
     <div className="pb-40">
       <Cover />
-      <div className="md:max-w-3xl lg: max-w-4xl mx-auto">
+      <div className="md:max-w-3xl lg:max-w-4xl mx-auto">
         <Toolbar initialData={document} />
         <EditorComponent
           onChange={onChange}
           initialContent={document.content}
         />
       </div>
-      <CommentSidebar documentId="doc123" />
+      <CommentSidebar documentId={document._id} />
     </div>
   );
 };

@@ -2,6 +2,9 @@
 
 import { useParams } from "next/navigation";
 import { MenuIcon } from "lucide-react";
+
+import { useEffect } from "react";
+import { useDocumentStore } from "@/hooks/use-document";
 import { Title } from "./title";
 
 interface NavbarProps {
@@ -9,27 +12,23 @@ interface NavbarProps {
   onResetWidth: () => void;
 }
 
-interface StaticDocument {
-  _id: string;
-  title: string;
-  isArchived: boolean;
-  isPublished: boolean;
-  icon?: string;
-}
-
 export const TopNavbar = ({ isCollapsed, onResetWidth }: NavbarProps) => {
   const params = useParams();
+  const { document, setDocument } = useDocumentStore();
 
-  const document: StaticDocument = {
-    _id: (params.documentId as string) || "1",
-    title: "Sample Document",
-    isArchived: false,
-    isPublished: false,
-    icon: "📄",
-  };
+  useEffect(() => {
+    const documentId = params.documentId as string;
+    if (documentId) {
+      setDocument(documentId);
+    }
+  }, [params.documentId, setDocument]);
+
+  if (!document) {
+    return <nav className="px-3 py-2">No document</nav>;
+  }
 
   return (
-    <nav className="px-3 py-2  flex items-center gap-x-4">
+    <nav className="px-3 py-2 flex items-center gap-x-4">
       {isCollapsed && (
         <MenuIcon
           role="button"
@@ -37,7 +36,7 @@ export const TopNavbar = ({ isCollapsed, onResetWidth }: NavbarProps) => {
           className="h-6 w-6 text-muted-foreground"
         />
       )}
-      <div className="flex  items-center justify-between">
+      <div className="flex items-center justify-between">
         <Title initialData={document} />
       </div>
     </nav>

@@ -4,11 +4,18 @@ import { useRef, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useDocumentStore } from "@/hooks/use-document";
 
 interface StaticDocument {
   _id: string;
-  title: string;
-  icon?: string;
+  isArchived: boolean;
+  isPublished: boolean;
+  initialData: {
+    title: string;
+    icon?: string;
+    coverImage?: string;
+  };
+  preview?: boolean;
 }
 
 interface TitleProps {
@@ -17,11 +24,14 @@ interface TitleProps {
 
 export const Title = ({ initialData }: TitleProps) => {
   const inputRef = useRef<HTMLInputElement>(null);
-  const [title, setTitle] = useState(initialData.title || "Untitled");
   const [isEditing, setIsEditing] = useState(false);
+  const { document, updateDocument } = useDocumentStore();
+
+  // Use store's title if available, otherwise fall back to initialData
+  const title =
+    document?.initialData.title || initialData.initialData.title || "Untitled";
 
   const enableInput = () => {
-    setTitle(initialData.title);
     setIsEditing(true);
     setTimeout(() => {
       inputRef.current?.focus();
@@ -34,7 +44,13 @@ export const Title = ({ initialData }: TitleProps) => {
   };
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setTitle(e.target.value || "Untitled");
+    const newTitle = e.target.value || "Untitled";
+    updateDocument({
+      initialData: {
+        ...document?.initialData,
+        title: newTitle,
+      },
+    });
   };
 
   const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -44,8 +60,8 @@ export const Title = ({ initialData }: TitleProps) => {
   };
 
   return (
-    <div className="flex items-center  gap-x-1">
-      {!!initialData.icon && <p>{initialData.icon}</p>}
+    <div className="flex items-center gap-x-1">
+      {!!initialData.initialData.icon && <p>{initialData.initialData.icon}</p>}
       {isEditing ? (
         <Input
           ref={inputRef}
