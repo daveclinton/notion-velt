@@ -3,13 +3,13 @@
 import dynamic from "next/dynamic";
 import { useMemo, useEffect } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Toolbar } from "../toolbar";
-import { Cover } from "../cover";
-import { CommentSidebar } from "../comment-sidebar";
+import { Toolbar } from "@/components/toolbar";
+import { Cover } from "@/components/cover";
+import { CommentSidebar } from "@/components/comment-sidebar";
 
 import { useParams } from "next/navigation";
 import { useDocumentStore } from "@/hooks/use-document";
-import { useCoverImage } from "@/hooks/use-cover-image";
+import { CoverImageModal } from "../modals/cover-image-modal";
 
 const DocumentPage = () => {
   const EditorComponent = useMemo(
@@ -19,10 +19,17 @@ const DocumentPage = () => {
 
   const { document, setDocument, updateDocument } = useDocumentStore();
   const params = useParams();
-  const coverImage = useCoverImage();
 
-  const onCoverChange = () => {
-    coverImage.onOpen();
+  useEffect(() => {
+    const documentId = params.documentId as string;
+    if (documentId) {
+      setDocument(documentId);
+    }
+  }, [params.documentId, setDocument]);
+
+  const onChange = (content: string) => {
+    updateDocument({ content });
+    console.log("Updated content:", content);
   };
 
   const onCoverRemove = () => {
@@ -34,18 +41,6 @@ const DocumentPage = () => {
         coverImage: undefined,
       },
     });
-  };
-
-  useEffect(() => {
-    const documentId = params.documentId as string;
-    if (documentId) {
-      setDocument(documentId);
-    }
-  }, [params.documentId, setDocument]);
-
-  const onChange = (content: string) => {
-    useDocumentStore.getState().updateDocument({ content });
-    console.log("Updated content:", content);
   };
 
   if (!document) {
@@ -68,17 +63,17 @@ const DocumentPage = () => {
       <Cover
         url={document.initialData.coverImage}
         preview={document.preview}
-        onChange={onCoverChange}
         onRemove={onCoverRemove}
       />
       <div className="md:max-w-3xl lg:max-w-4xl mx-auto">
-        <Toolbar initialData={document} />
+        <Toolbar initialData={document} preview={document.preview} />
         <EditorComponent
           onChange={onChange}
           initialContent={document.content}
         />
       </div>
       <CommentSidebar documentId={document._id} />
+      <CoverImageModal />
     </div>
   );
 };
