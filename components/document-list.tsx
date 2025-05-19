@@ -43,7 +43,7 @@ export const DocumentList = ({
   };
 
   const onRedirect = (documentId: string) => {
-    router.push(`/documents/${documentId}`);
+    router.push(`/${documentId}`);
   };
 
   // Filter documents by parentDocumentId to simulate hierarchy

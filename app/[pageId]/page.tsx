@@ -7,5 +7,9 @@ export default async function Page({ params }: { params: Params }) {
   const { pageId } = await params;
   const currentPage = findPageById(pageId, pageTree);
   console.log(currentPage);
-  return <DocumentPage />;
+  return (
+    <div className="h-full">
+      <DocumentPage />
+    </div>
+  );
 }

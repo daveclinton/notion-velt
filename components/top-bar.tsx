@@ -21,7 +21,7 @@ interface StaticDocument {
   icon?: string;
 }
 
-export const Navbar = ({ isCollapsed, onResetWidth }: NavbarProps) => {
+export const TopNavbar = ({ isCollapsed, onResetWidth }: NavbarProps) => {
   const params = useParams();
 
   // Static dummy document for UI rendering

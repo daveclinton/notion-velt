@@ -27,9 +27,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning className="h-full">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased dark`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased h-full dark`}
       >
         <ThemeProvider
           attribute="class"
@@ -37,12 +37,14 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <VeltWrapper>
-            <div className="h-full flex dark:bg-[#1F1F1F]">
-              <Navigation />
-              <main className="flex-1 h-full overflow-y-auto">
-                <SearchCommand />
-                {children}
-              </main>
+            <div className="min-h-screen flex flex-col">
+              <div className="flex flex-1">
+                <Navigation />
+                <main className="flex-1 h-full overflow-y-auto">
+                  <SearchCommand />
+                  {children}
+                </main>
+              </div>
             </div>
           </VeltWrapper>
         </ThemeProvider>
