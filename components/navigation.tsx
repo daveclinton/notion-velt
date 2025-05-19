@@ -117,7 +117,7 @@ export const Navigation = () => {
   };
 
   return (
-    <>
+    <div className="flex h-screen w-full overflow-hidden">
       <aside
         ref={sidebarRef}
         className={cn(
@@ -185,6 +185,6 @@ export const Navigation = () => {
           </nav>
         )}
       </div>
-    </>
+    </div>
   );
 };
