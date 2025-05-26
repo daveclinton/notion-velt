@@ -14,6 +14,8 @@ import { toast } from "sonner";
 import { UpdateDocumentPayload } from "@/lib/validators/Document";
 import { TipTapEditorExtensions } from "./lib/extensions-editor";
 import { TipTapEditorProps } from "./lib/props";
+import { SlashCmd, SlashCmdProvider } from "@harshtalks/slash-tiptap";
+import { suggestions } from "./custom-extensions/suggestions-items";
 
 export default function Editor({
   editorJson,
@@ -91,20 +93,42 @@ export default function Editor({
   }, [editor, hydrated, editorJson]);
 
   return (
-    <div
-      id="editor-container"
-      className="relative w-full cursor-text flex-1 px-10 md:px-24 pb-16 selection:text-[unset] selection:bg-sky-200 dark:selection:bg-sky-600/50"
-    >
-      {hydrated ? (
-        <div id="menu-two" className="w-full max-w-[708px] mx-auto h-full">
-          <TextMenu editor={editor} />
-          <EditorContent editor={editor} />
-        </div>
-      ) : (
-        <div className="w-full max-w-[708px] mx-auto h-full">
-          <Skeleton />
-        </div>
-      )}
-    </div>
+    <SlashCmdProvider>
+      <div
+        id="editor-container"
+        className="relative w-full cursor-text flex-1 px-10 md:px-24 pb-16 selection:text-[unset] selection:bg-sky-200 dark:selection:bg-sky-600/50"
+      >
+        {hydrated ? (
+          <div id="menu-two" className="w-full max-w-[708px] mx-auto h-full">
+            <TextMenu editor={editor} />
+            <EditorContent editor={editor} />
+          </div>
+        ) : (
+          <div className="w-full max-w-[708px] mx-auto h-full">
+            <Skeleton />
+          </div>
+        )}
+      </div>
+      <SlashCmd.Root editor={editor}>
+        <SlashCmd.Cmd>
+          <SlashCmd.Empty>No commands available</SlashCmd.Empty>
+          <SlashCmd.List>
+            {suggestions.map((item) => {
+              return (
+                <SlashCmd.Item
+                  value={item.title}
+                  onCommand={(val) => {
+                    item.command(val);
+                  }}
+                  key={item.title}
+                >
+                  <p>{item.title}</p>
+                </SlashCmd.Item>
+              );
+            })}
+          </SlashCmd.List>
+        </SlashCmd.Cmd>
+      </SlashCmd.Root>
+    </SlashCmdProvider>
   );
 }
