@@ -16,7 +16,6 @@ import { ElementRef, useEffect, useRef, useState } from "react";
 import { UserItem } from "./user-item";
 import { Item } from "./item";
 import { toast } from "sonner";
-
 import {
   Popover,
   PopoverContent,
@@ -24,11 +23,13 @@ import {
 } from "@/components/ui/popover";
 import { TrashBox } from "./trash-box";
 import { useSearch } from "@/hooks/use-search";
-
 import { useSettings } from "@/hooks/use-setting";
 import { useMediaQuery } from "usehooks-ts";
 import { DocumentList } from "./document-list";
 import { TopNavbar } from "./top-bar";
+import { useDocumentStore } from "@/hooks/use-document";
+import { pageTree, pageBlocks } from "@/lib/mock-data";
+import { BlockType } from "@/types";
 
 export const Navigation = () => {
   const router = useRouter();
@@ -37,6 +38,7 @@ export const Navigation = () => {
   const params = useParams();
   const pathname = usePathname();
   const isMobile = useMediaQuery("(max-width: 768px)");
+  const { setDocument } = useDocumentStore();
 
   const isResizingRef = useRef(false);
   const sidebarRef = useRef<ElementRef<"aside">>(null);
@@ -44,6 +46,15 @@ export const Navigation = () => {
   const [isResetting, setIsResetting] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(false);
 
+  // Set document when documentId changes
+  useEffect(() => {
+    const documentId = params.documentId as string;
+    if (documentId) {
+      setDocument(documentId);
+    }
+  }, [params.documentId, setDocument]);
+
+  // Collapse sidebar on mobile or pathname change
   useEffect(() => {
     if (isMobile) {
       collapse();
@@ -112,8 +123,26 @@ export const Navigation = () => {
   };
 
   const handleCreate = () => {
+    const newId = `page-${Date.now()}`;
+    const newPage = {
+      id: newId,
+      title: "Untitled Page",
+      emoji: "📄",
+      parentId: null,
+      children: [],
+    };
+    pageTree.push(newPage);
+    pageBlocks[newId] = [
+      {
+        id: `block-${newId}-1`,
+        type: BlockType.PARAGRAPH,
+        content: "Start typing here...",
+      },
+    ];
+
     toast.success("New note created!");
-    router.push(`/new-${Date.now()}`);
+    setDocument(newId);
+    router.push(`/${newId}`);
   };
 
   return (

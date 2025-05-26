@@ -24,13 +24,3 @@ export enum BlockType {
   CODE = "code",
   QOUTE = "quote",
 }
-
-export interface DummyUser {
-  id: string;
-  name: string;
-  avatar: string;
-  email: string;
-  organizationId: string;
-  color: string;
-  textColor: string;
-}

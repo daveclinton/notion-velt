@@ -1,43 +1,4 @@
-import { BlockType, PageTreeType, Block, DummyUser } from "@/types";
-
-export const dummyUsers: DummyUser[] = [
-  {
-    id: "user1",
-    name: "Alice Smith",
-    avatar: "https://i.pravatar.cc/150?img=1",
-    email: "alice@gmail.com",
-    organizationId: "org123",
-    color: "#FF5733",
-    textColor: "#FFFFFF",
-  },
-  {
-    id: "user2",
-    name: "Bob Jones",
-    avatar: "https://i.pravatar.cc/150?img=2",
-    email: "bob@gmail.com",
-    organizationId: "org123",
-    color: "#33B5FF",
-    textColor: "#FFFFFF",
-  },
-  {
-    id: "user3",
-    name: "Charlie Rose",
-    avatar: "https://i.pravatar.cc/150?img=3",
-    email: "charlie@startup.io",
-    organizationId: "org456",
-    color: "#22C55E",
-    textColor: "#000000",
-  },
-  {
-    id: "user4",
-    name: "Diana Lopez",
-    avatar: "https://i.pravatar.cc/150?img=4",
-    email: "diana@freelance.me",
-    organizationId: "org789",
-    color: "#8B5CF6",
-    textColor: "#FFFFFF",
-  },
-];
+import { BlockType, PageTreeType, Block } from "@/types";
 
 export const pageTree: PageTreeType[] = [
   {
