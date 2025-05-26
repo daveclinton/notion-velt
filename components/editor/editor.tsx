@@ -16,6 +16,7 @@ import { TipTapEditorExtensions } from "./lib/extensions-editor";
 import { TipTapEditorProps } from "./lib/props";
 import { SlashCmd, SlashCmdProvider } from "@harshtalks/slash-tiptap";
 import { suggestions } from "./custom-extensions/suggestions-items";
+import { CommandMenu } from "./CommandMenu";
 
 export default function Editor({
   editorJson,
@@ -102,6 +103,7 @@ export default function Editor({
           <div id="menu-two" className="w-full max-w-[708px] mx-auto h-full">
             <TextMenu editor={editor} />
             <EditorContent editor={editor} />
+            <CommandMenu editor={editor} />
           </div>
         ) : (
           <div className="w-full max-w-[708px] mx-auto h-full">
@@ -109,26 +111,6 @@ export default function Editor({
           </div>
         )}
       </div>
-      <SlashCmd.Root editor={editor}>
-        <SlashCmd.Cmd>
-          <SlashCmd.Empty>No commands available</SlashCmd.Empty>
-          <SlashCmd.List>
-            {suggestions.map((item) => {
-              return (
-                <SlashCmd.Item
-                  value={item.title}
-                  onCommand={(val) => {
-                    item.command(val);
-                  }}
-                  key={item.title}
-                >
-                  <p>{item.title}</p>
-                </SlashCmd.Item>
-              );
-            })}
-          </SlashCmd.List>
-        </SlashCmd.Cmd>
-      </SlashCmd.Root>
     </SlashCmdProvider>
   );
 }
