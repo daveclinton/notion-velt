@@ -77,7 +77,7 @@ export const CommentSidebar: FC<CommentSidebarProps> = ({ documentId }) => {
         <ChevronsLeft className="h-6 w-6" />
       </div>
       <div className="flex items-center gap-2">
-        <VeltPresence inactivityTime={30000} />
+        <VeltPresence />
         <button className="flex items-center gap-2 hover:bg-[color:var(--color-sidebar-accent)] px-2 py-1 rounded cursor-pointer">
           <span>Share</span>
         </button>

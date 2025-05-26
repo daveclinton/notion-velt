@@ -10,6 +10,7 @@ import { CommentSidebar } from "@/components/comment-sidebar";
 import { useParams } from "next/navigation";
 import { useDocumentStore } from "@/hooks/use-document";
 import { CoverImageModal } from "../modals/cover-image-modal";
+import { useSetDocument } from "@veltdev/react";
 
 const DocumentPage = () => {
   const EditorComponent = useMemo(
@@ -32,6 +33,9 @@ const DocumentPage = () => {
     console.log("Updated content:", content);
   };
 
+  useSetDocument(params.documentId as string, {
+    documentName: document?.initialData.title || "Untitled",
+  });
   const onCoverRemove = () => {
     updateDocument({
       initialData: {
