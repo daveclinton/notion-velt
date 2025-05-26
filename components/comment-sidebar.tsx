@@ -22,6 +22,7 @@ import {
 } from "./ui/dropdown-menu";
 import { Button } from "./ui/button";
 import { useTheme } from "next-themes";
+import { VeltPresence } from "@veltdev/react";
 
 interface Comment {
   id: number;
@@ -76,9 +77,7 @@ export const CommentSidebar: FC<CommentSidebarProps> = ({ documentId }) => {
         <ChevronsLeft className="h-6 w-6" />
       </div>
       <div className="flex items-center gap-2">
-        <div className="bg-[color:var(--color-sidebar-accent)] rounded-full h-8 w-8 flex items-center justify-center">
-          <span className="text-sm">D</span>
-        </div>
+        <VeltPresence inactivityTime={30000} />
         <button className="flex items-center gap-2 hover:bg-[color:var(--color-sidebar-accent)] px-2 py-1 rounded cursor-pointer">
           <span>Share</span>
         </button>
