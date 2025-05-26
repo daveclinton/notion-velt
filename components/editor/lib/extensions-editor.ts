@@ -1,11 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { TiptapExtensions } from "./extensions";
+
 import HorizontalRule from "@tiptap/extension-horizontal-rule";
 
 import Dropcursor from "@tiptap/extension-dropcursor";
 import History from "@tiptap/extension-history";
 import Placeholder from "@tiptap/extension-placeholder";
 import SlashCommand from "../custom-extensions/SlashCommand";
+import { TiptapExtensions } from "./extensions";
 
 export const TipTapEditorExtensions = [
   ...TiptapExtensions,

@@ -23,7 +23,7 @@ export default function Editor({
   id: string;
 }) {
   const router = useRouter();
-  // eslint-disable-next-line no-unused-vars
+
   const [_, startTransition] = useTransition();
   const [hydrated, setHydrated] = useState<boolean>(false);
   const [content, setContent] = useState<JSONContent | null>(null);
