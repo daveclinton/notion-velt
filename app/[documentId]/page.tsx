@@ -1,4 +1,5 @@
 import { CommentSidebar } from "@/components/comment-sidebar";
+import { Cover } from "@/components/cover";
 import Editor from "@/components/editor/editor";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { findPageById, pageTree } from "@/lib/mock-data";
@@ -54,43 +55,10 @@ export default async function Page({ params }: { params: Params }) {
   };
 
   return (
-    // <div className="h-full">
-    //   <Editor id={documentId} editorJson={dummyEditorJson} />
-    //   <CommentSidebar documentId={documentId} />
-    // </div>
-
-    <ScrollArea className="h-[calc(100vh_-_48px)]" type="always">
+    <ScrollArea type="always">
       <main className="flex flex-col h-[inherit]">
-        {/* {coverImage && <CoverImage coverImage={coverImage} id={documentId} />} */}
-
+        <Cover url="https://picsum.photos/id/11/200/300" />
         <section className="flex flex-col flex-1 w-full">
-          {/* <div
-            className={cn(
-              "group flex flex-col shrink-0 px-10 md:px-24 w-full max-w-[900px] mx-auto relative",
-              iconImage && coverImage && "pt-[70px]",
-              !iconImage && coverImage && "pt-[25px]",
-              iconImage && !coverImage && "pt-16",
-              !iconImage && !coverImage && "pt-10"
-            )}
-          >
-            {iconImage && (
-              <IconImage
-                id={documentId}
-                isCoverImage={!!coverImage}
-                iconImage={iconImage}
-              />
-            )}
-
-            {!(iconImage && coverImage) && (
-              <div className="h-6 inline-flex gap-2 mt-5">
-                {!iconImage && <IconImgUploadBtn id={documentId} />}
-                {!coverImage && <CoverImgUploadBtn id={documentId} />}
-              </div>
-            )}
-
-            <Title currentTitle={title} id={documentId} />
-          </div> */}
-
           <Editor id={documentId} editorJson={dummyEditorJson} />
         </section>
       </main>

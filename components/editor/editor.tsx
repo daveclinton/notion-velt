@@ -6,7 +6,6 @@ import { useEditor, EditorContent, JSONContent } from "@tiptap/react";
 import { useState, useEffect, useTransition, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { useDebouncedCallback } from "use-debounce";
-
 import Skeleton from "./components/Skeleton";
 import TextMenu from "./BubbleMenu/TextMenu";
 import { useSaving } from "@/store/use-saving";
@@ -14,8 +13,7 @@ import { toast } from "sonner";
 import { UpdateDocumentPayload } from "@/lib/validators/Document";
 import { TipTapEditorExtensions } from "./lib/extensions-editor";
 import { TipTapEditorProps } from "./lib/props";
-import { SlashCmd, SlashCmdProvider } from "@harshtalks/slash-tiptap";
-import { suggestions } from "./custom-extensions/suggestions-items";
+import { SlashCmdProvider } from "@harshtalks/slash-tiptap";
 import { CommandMenu } from "./CommandMenu";
 
 export default function Editor({
