@@ -57,7 +57,7 @@ export default async function Page({ params }: { params: Params }) {
   return (
     <ScrollArea type="always">
       <main className="flex flex-col h-[inherit]">
-        <Cover url="https://picsum.photos/id/11/200/300" />
+        <Cover url="https://picsum.photos/id/29/200/300" />
         <section className="flex flex-col flex-1 w-full">
           <Editor id={documentId} editorJson={dummyEditorJson} />
         </section>

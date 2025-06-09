@@ -72,54 +72,38 @@ export function CommandMenu({ editor }: CommandMenuProps) {
       </SlashCmd.Cmd>
 
       <style jsx>{`
-        .slash-cmd-root {
-          background: #ffffff;
-          border: 1px solid #e2e8f0;
-          border-radius: 12px;
-          box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
-            0 10px 10px -5px rgba(0, 0, 0, 0.04);
-          max-width: 320px;
-          max-height: 350px;
-          overflow: hidden;
-          font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto",
-            sans-serif;
-          z-index: 1000;
-          backdrop-filter: blur(8px);
-        }
-
         .slash-cmd-empty {
-          padding: 20px 16px;
+          padding: 16px 12px;
         }
 
         .empty-state {
           display: flex;
           flex-direction: column;
           align-items: center;
-          gap: 12px;
-          color: #64748b;
+          gap: 8px;
+          color: #6b7280;
           text-align: center;
         }
 
         .empty-state svg {
-          opacity: 0.6;
-          color: #94a3b8;
+          opacity: 0.5;
         }
 
         .empty-state span {
-          font-size: 14px;
+          font-size: 13px;
           font-weight: 500;
         }
 
         .slash-cmd-list {
-          padding: 8px;
-          max-height: 320px;
+          padding: 6px;
+          max-height: 288px;
           overflow-y: auto;
           scrollbar-width: thin;
-          scrollbar-color: #cbd5e1 transparent;
+          scrollbar-color: #d1d5db transparent;
         }
 
         .slash-cmd-list::-webkit-scrollbar {
-          width: 6px;
+          width: 4px;
         }
 
         .slash-cmd-list::-webkit-scrollbar-track {
@@ -127,35 +111,20 @@ export function CommandMenu({ editor }: CommandMenuProps) {
         }
 
         .slash-cmd-list::-webkit-scrollbar-thumb {
-          background-color: #cbd5e1;
-          border-radius: 3px;
-        }
-
-        .slash-cmd-list::-webkit-scrollbar-thumb:hover {
-          background-color: #94a3b8;
-        }
-
-        .slash-cmd-item {
-          border-radius: 8px;
-          padding: 0;
-          margin-bottom: 2px;
-          cursor: pointer;
-          transition: all 0.2s ease;
-          border: none;
-          background: transparent;
+          background-color: #d1d5db;
+          border-radius: 2px;
         }
 
         .slash-cmd-item:hover,
         .slash-cmd-item[data-selected="true"] {
-          background: #f1f5f9;
-          transform: translateY(-1px);
+          background: #f3f4f6;
         }
 
         .command-item-content {
           display: flex;
           align-items: center;
-          gap: 12px;
-          padding: 10px 12px;
+          gap: 10px;
+          padding: 8px;
           width: 100%;
         }
 
@@ -163,27 +132,25 @@ export function CommandMenu({ editor }: CommandMenuProps) {
           display: flex;
           align-items: center;
           justify-content: center;
-          width: 32px;
-          height: 32px;
-          border-radius: 8px;
+          width: 28px;
+          height: 28px;
+          border-radius: 5px;
           background: #f8fafc;
           border: 1px solid #e2e8f0;
           flex-shrink: 0;
-          transition: all 0.2s ease;
+          transition: all 0.15s ease;
         }
 
         .slash-cmd-item:hover .command-icon,
         .slash-cmd-item[data-selected="true"] .command-icon {
           background: #e0e7ff;
           border-color: #c7d2fe;
-          transform: scale(1.05);
         }
 
         .command-icon svg {
-          width: 16px;
-          height: 16px;
-          color: #475569;
-          transition: color 0.2s ease;
+          width: 14px;
+          height: 14px;
+          transition: color 0.15s ease;
         }
 
         .slash-cmd-item:hover .command-icon svg,
@@ -195,121 +162,89 @@ export function CommandMenu({ editor }: CommandMenuProps) {
           flex: 1;
           display: flex;
           flex-direction: column;
-          gap: 3px;
+          gap: 2px;
           min-width: 0;
         }
 
         .command-title {
-          font-size: 14px;
-          font-weight: 600;
-          color: #0f172a;
-          line-height: 1.3;
+          font-size: 13px;
+          font-weight: 500;
+          color: #111827;
+          line-height: 1.2;
         }
 
         .command-description {
-          font-size: 12px;
-          color: #64748b;
-          line-height: 1.3;
+          font-size: 11px;
+          color: #6b7280;
+          line-height: 1.2;
         }
 
         .command-shortcut {
-          font-size: 11px;
-          color: #64748b;
-          background: #f1f5f9;
-          padding: 4px 8px;
-          border-radius: 6px;
-          border: 1px solid #e2e8f0;
+          font-size: 10px;
+          color: #9ca3af;
+          background: #f9fafb;
+          padding: 2px 6px;
+          border-radius: 4px;
+          border: 1px solid #e5e7eb;
           font-family: "SF Mono", Monaco, "Cascadia Code", monospace;
-          font-weight: 500;
           flex-shrink: 0;
-          transition: all 0.2s ease;
         }
 
         .slash-cmd-item:hover .command-shortcut,
         .slash-cmd-item[data-selected="true"] .command-shortcut {
           background: #eef2ff;
           border-color: #c7d2fe;
-          color: #4f46e5;
+          color: #6366f1;
         }
 
-        /* Dark Mode Styles */
         .dark .slash-cmd-root {
-          background: #0f172a;
-          border-color: #1e293b;
-          box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.4),
-            0 10px 10px -5px rgba(0, 0, 0, 0.2);
+          background: #1f2937;
+          border-color: #374151;
         }
 
         .dark .slash-cmd-item:hover,
         .dark .slash-cmd-item[data-selected="true"] {
-          background: #1e293b;
+          background: #374151;
         }
 
         .dark .command-icon {
-          background: #1e293b;
-          border-color: #334155;
+          background: #374151;
+          border-color: #4b5563;
         }
 
         .dark .slash-cmd-item:hover .command-icon,
         .dark .slash-cmd-item[data-selected="true"] .command-icon {
-          background: #312e81;
-          border-color: #4f46e5;
-        }
-
-        .dark .command-icon svg {
-          color: #cbd5e1;
-        }
-
-        .dark .slash-cmd-item:hover .command-icon svg,
-        .dark .slash-cmd-item[data-selected="true"] .command-icon svg {
-          color: #a5b4fc;
+          background: #4338ca;
+          border-color: #6366f1;
         }
 
         .dark .command-title {
-          color: #f1f5f9;
+          color: #f9fafb;
         }
 
         .dark .command-description {
-          color: #94a3b8;
+          color: #9ca3af;
         }
 
         .dark .command-shortcut {
-          background: #1e293b;
-          border-color: #334155;
-          color: #94a3b8;
+          background: #374151;
+          border-color: #4b5563;
+          color: #9ca3af;
         }
 
         .dark .slash-cmd-item:hover .command-shortcut,
         .dark .slash-cmd-item[data-selected="true"] .command-shortcut {
-          background: #312e81;
-          border-color: #4f46e5;
-          color: #a5b4fc;
+          background: #4338ca;
+          border-color: #6366f1;
+          color: #c7d2fe;
         }
 
         .dark .empty-state {
-          color: #94a3b8;
-        }
-
-        .dark .empty-state svg {
-          color: #64748b;
+          color: #9ca3af;
         }
 
         .dark .slash-cmd-list::-webkit-scrollbar-thumb {
-          background-color: #334155;
-        }
-
-        .dark .slash-cmd-list::-webkit-scrollbar-thumb:hover {
-          background-color: #475569;
-        }
-
-        /* Focus styles for accessibility */
-        .slash-cmd-item:focus-visible {
-          outline: 2px solid #4f46e5;
-          outline-offset: 2px;
-        }
-
-        .dark .slash-cmd-item:focus-visible {
-          outline-color: #a5b4fc;
+          background-color: #4b5563;
         }
       `}</style>
     </SlashCmd.Root>
@@ -320,8 +255,8 @@ function getCommandIcon(title: string) {
   const icons: Record<string, JSX.Element> = {
     "Heading 1": (
       <svg
-        width="16"
-        height="16"
+        width="14"
+        height="14"
         viewBox="0 0 24 24"
         fill="none"
         stroke="currentColor"
@@ -334,8 +269,8 @@ function getCommandIcon(title: string) {
     ),
     "Heading 2": (
       <svg
-        width="16"
-        height="16"
+        width="14"
+        height="14"
         viewBox="0 0 24 24"
         fill="none"
         stroke="currentColor"
@@ -348,8 +283,8 @@ function getCommandIcon(title: string) {
     ),
     "Bullet List": (
       <svg
-        width="16"
-        height="16"
+        width="14"
+        height="14"
         viewBox="0 0 24 24"
         fill="none"
         stroke="currentColor"
@@ -365,8 +300,8 @@ function getCommandIcon(title: string) {
     ),
     "Ordered List": (
       <svg
-        width="16"
-        height="16"
+        width="14"
+        height="14"
         viewBox="0 0 24 24"
         fill="none"
         stroke="currentColor"
@@ -382,8 +317,8 @@ function getCommandIcon(title: string) {
     ),
     "Code Block": (
       <svg
-        width="16"
-        height="16"
+        width="14"
+        height="14"
         viewBox="0 0 24 24"
         fill="none"
         stroke="currentColor"
@@ -395,8 +330,8 @@ function getCommandIcon(title: string) {
     ),
     Link: (
       <svg
-        width="16"
-        height="16"
+        width="14"
+        height="14"
         viewBox="0 0 24 24"
         fill="none"
         stroke="currentColor"
@@ -408,8 +343,8 @@ function getCommandIcon(title: string) {
     ),
     "Bold Text": (
       <svg
-        width="16"
-        height="16"
+        width="14"
+        height="14"
         viewBox="0 0 24 24"
         fill="none"
         stroke="currentColor"
@@ -421,8 +356,8 @@ function getCommandIcon(title: string) {
     ),
     "Italic Text": (
       <svg
-        width="16"
-        height="16"
+        width="14"
+        height="14"
         viewBox="0 0 24 24"
         fill="none"
         stroke="currentColor"
@@ -438,8 +373,8 @@ function getCommandIcon(title: string) {
   return (
     icons[title] || (
       <svg
-        width="16"
-        height="16"
+        width="14"
+        height="14"
         viewBox="0 0 24 24"
         fill="none"
         stroke="currentColor"

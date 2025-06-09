@@ -6,6 +6,7 @@ import { useEditor, EditorContent, JSONContent } from "@tiptap/react";
 import { useState, useEffect, useTransition, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { useDebouncedCallback } from "use-debounce";
+import { useSetDocument } from "@veltdev/react";
 import Skeleton from "./components/Skeleton";
 import TextMenu from "./BubbleMenu/TextMenu";
 import { useSaving } from "@/store/use-saving";
@@ -16,13 +17,19 @@ import { TipTapEditorProps } from "./lib/props";
 import { SlashCmdProvider } from "@harshtalks/slash-tiptap";
 import { CommandMenu } from "./CommandMenu";
 
+interface EditorProps {
+  editorJson: any;
+  id: string;
+  documentName?: string;
+  organizationId?: string;
+}
+
 export default function Editor({
   editorJson,
   id,
-}: {
-  editorJson: any;
-  id: string;
-}) {
+  documentName,
+  organizationId,
+}: EditorProps) {
   const router = useRouter();
 
   const [_, startTransition] = useTransition();
@@ -30,6 +37,19 @@ export default function Editor({
   const [content, setContent] = useState<JSONContent | null>(null);
 
   const { setIsSaving } = useSaving();
+
+  // Initialize Velt document for collaboration
+  // Use organizationId if provided for cross-organization access
+  const documentMetadata = organizationId
+    ? {
+        documentName: documentName || `Document ${id}`,
+        organizationId,
+      }
+    : {
+        documentName: documentName || `Document ${id}`,
+      };
+
+  useSetDocument(id, documentMetadata);
 
   const updateEditorJson = useCallback(
     async (editorJson: JSONContent) => {
@@ -42,8 +62,7 @@ export default function Editor({
         });
       } catch (error) {
         console.log(error);
-
-        toast("Hello edito update");
+        toast("Error updating document");
       } finally {
         startTransition(() => {
           setIsSaving(false);
