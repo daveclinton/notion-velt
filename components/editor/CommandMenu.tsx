@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { SlashCmd } from "@harshtalks/slash-tiptap";
 import { Editor } from "@tiptap/react";
 import { suggestions } from "./custom-extensions/suggestions-items";
@@ -14,14 +12,27 @@ export function CommandMenu({ editor }: CommandMenuProps) {
     return null;
   }
 
+  const essentialCommands = suggestions.filter((item) =>
+    [
+      "Heading 1",
+      "Heading 2",
+      "Bullet List",
+      "Ordered List",
+      "Code Block",
+      "Link",
+      "Bold Text",
+      "Italic Text",
+    ].includes(item.title)
+  );
+
   return (
     <SlashCmd.Root editor={editor}>
       <SlashCmd.Cmd className="slash-cmd-root">
         <SlashCmd.Empty className="slash-cmd-empty">
           <div className="empty-state">
             <svg
-              width="24"
-              height="24"
+              width="20"
+              height="20"
               viewBox="0 0 24 24"
               fill="none"
               stroke="currentColor"
@@ -36,7 +47,7 @@ export function CommandMenu({ editor }: CommandMenuProps) {
           </div>
         </SlashCmd.Empty>
         <SlashCmd.List className="slash-cmd-list">
-          {suggestions.map((item) => (
+          {essentialCommands.map((item) => (
             <SlashCmd.Item
               value={item.title}
               onCommand={(val) => item.command(val)}
@@ -62,21 +73,22 @@ export function CommandMenu({ editor }: CommandMenuProps) {
 
       <style jsx>{`
         .slash-cmd-root {
-          background: white;
-          border: 1px solid #e5e7eb;
+          background: #ffffff;
+          border: 1px solid #e2e8f0;
           border-radius: 12px;
-          box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1),
-            0 4px 6px -2px rgba(0, 0, 0, 0.05);
+          box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
+            0 10px 10px -5px rgba(0, 0, 0, 0.04);
           max-width: 320px;
-          max-height: 400px;
+          max-height: 350px;
           overflow: hidden;
           font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto",
             sans-serif;
           z-index: 1000;
+          backdrop-filter: blur(8px);
         }
 
         .slash-cmd-empty {
-          padding: 32px 24px;
+          padding: 20px 16px;
         }
 
         .empty-state {
@@ -84,12 +96,13 @@ export function CommandMenu({ editor }: CommandMenuProps) {
           flex-direction: column;
           align-items: center;
           gap: 12px;
-          color: #6b7280;
+          color: #64748b;
           text-align: center;
         }
 
         .empty-state svg {
-          opacity: 0.5;
+          opacity: 0.6;
+          color: #94a3b8;
         }
 
         .empty-state span {
@@ -99,10 +112,10 @@ export function CommandMenu({ editor }: CommandMenuProps) {
 
         .slash-cmd-list {
           padding: 8px;
-          max-height: 360px;
+          max-height: 320px;
           overflow-y: auto;
           scrollbar-width: thin;
-          scrollbar-color: #d1d5db transparent;
+          scrollbar-color: #cbd5e1 transparent;
         }
 
         .slash-cmd-list::-webkit-scrollbar {
@@ -114,12 +127,12 @@ export function CommandMenu({ editor }: CommandMenuProps) {
         }
 
         .slash-cmd-list::-webkit-scrollbar-thumb {
-          background-color: #d1d5db;
+          background-color: #cbd5e1;
           border-radius: 3px;
         }
 
         .slash-cmd-list::-webkit-scrollbar-thumb:hover {
-          background-color: #9ca3af;
+          background-color: #94a3b8;
         }
 
         .slash-cmd-item {
@@ -127,26 +140,22 @@ export function CommandMenu({ editor }: CommandMenuProps) {
           padding: 0;
           margin-bottom: 2px;
           cursor: pointer;
-          transition: all 0.15s ease;
+          transition: all 0.2s ease;
           border: none;
           background: transparent;
         }
 
         .slash-cmd-item:hover,
         .slash-cmd-item[data-selected="true"] {
-          background: #f3f4f6;
+          background: #f1f5f9;
           transform: translateY(-1px);
-        }
-
-        .slash-cmd-item:active {
-          transform: translateY(0);
         }
 
         .command-item-content {
           display: flex;
           align-items: center;
           gap: 12px;
-          padding: 12px;
+          padding: 10px 12px;
           width: 100%;
         }
 
@@ -156,24 +165,25 @@ export function CommandMenu({ editor }: CommandMenuProps) {
           justify-content: center;
           width: 32px;
           height: 32px;
-          border-radius: 6px;
+          border-radius: 8px;
           background: #f8fafc;
           border: 1px solid #e2e8f0;
           flex-shrink: 0;
-          transition: all 0.15s ease;
+          transition: all 0.2s ease;
         }
 
         .slash-cmd-item:hover .command-icon,
         .slash-cmd-item[data-selected="true"] .command-icon {
           background: #e0e7ff;
           border-color: #c7d2fe;
+          transform: scale(1.05);
         }
 
         .command-icon svg {
           width: 16px;
           height: 16px;
-          color: #64748b;
-          transition: color 0.15s ease;
+          color: #475569;
+          transition: color 0.2s ease;
         }
 
         .slash-cmd-item:hover .command-icon svg,
@@ -185,111 +195,129 @@ export function CommandMenu({ editor }: CommandMenuProps) {
           flex: 1;
           display: flex;
           flex-direction: column;
-          gap: 2px;
+          gap: 3px;
           min-width: 0;
         }
 
         .command-title {
           font-size: 14px;
-          font-weight: 500;
-          color: #111827;
-          line-height: 1.2;
+          font-weight: 600;
+          color: #0f172a;
+          line-height: 1.3;
         }
 
         .command-description {
           font-size: 12px;
-          color: #6b7280;
-          line-height: 1.2;
+          color: #64748b;
+          line-height: 1.3;
         }
 
         .command-shortcut {
           font-size: 11px;
-          color: #9ca3af;
-          background: #f9fafb;
-          padding: 2px 6px;
-          border-radius: 4px;
-          border: 1px solid #e5e7eb;
+          color: #64748b;
+          background: #f1f5f9;
+          padding: 4px 8px;
+          border-radius: 6px;
+          border: 1px solid #e2e8f0;
           font-family: "SF Mono", Monaco, "Cascadia Code", monospace;
+          font-weight: 500;
           flex-shrink: 0;
+          transition: all 0.2s ease;
         }
 
         .slash-cmd-item:hover .command-shortcut,
         .slash-cmd-item[data-selected="true"] .command-shortcut {
           background: #eef2ff;
           border-color: #c7d2fe;
-          color: #6366f1;
+          color: #4f46e5;
         }
 
-        /* Dark mode support */
-        @media (prefers-color-scheme: dark) {
-          .slash-cmd-root {
-            background: #1f2937;
-            border-color: #374151;
-          }
+        /* Dark Mode Styles */
+        .dark .slash-cmd-root {
+          background: #0f172a;
+          border-color: #1e293b;
+          box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.4),
+            0 10px 10px -5px rgba(0, 0, 0, 0.2);
+        }
 
-          .slash-cmd-item:hover,
-          .slash-cmd-item[data-selected="true"] {
-            background: #374151;
-          }
+        .dark .slash-cmd-item:hover,
+        .dark .slash-cmd-item[data-selected="true"] {
+          background: #1e293b;
+        }
 
-          .command-icon {
-            background: #374151;
-            border-color: #4b5563;
-          }
+        .dark .command-icon {
+          background: #1e293b;
+          border-color: #334155;
+        }
 
-          .slash-cmd-item:hover .command-icon,
-          .slash-cmd-item[data-selected="true"] .command-icon {
-            background: #4338ca;
-            border-color: #6366f1;
-          }
+        .dark .slash-cmd-item:hover .command-icon,
+        .dark .slash-cmd-item[data-selected="true"] .command-icon {
+          background: #312e81;
+          border-color: #4f46e5;
+        }
 
-          .command-title {
-            color: #f9fafb;
-          }
+        .dark .command-icon svg {
+          color: #cbd5e1;
+        }
 
-          .command-description {
-            color: #9ca3af;
-          }
+        .dark .slash-cmd-item:hover .command-icon svg,
+        .dark .slash-cmd-item[data-selected="true"] .command-icon svg {
+          color: #a5b4fc;
+        }
 
-          .command-shortcut {
-            background: #374151;
-            border-color: #4b5563;
-            color: #9ca3af;
-          }
+        .dark .command-title {
+          color: #f1f5f9;
+        }
 
-          .slash-cmd-item:hover .command-shortcut,
-          .slash-cmd-item[data-selected="true"] .command-shortcut {
-            background: #4338ca;
-            border-color: #6366f1;
-            color: #c7d2fe;
-          }
+        .dark .command-description {
+          color: #94a3b8;
+        }
 
-          .empty-state {
-            color: #9ca3af;
-          }
+        .dark .command-shortcut {
+          background: #1e293b;
+          border-color: #334155;
+          color: #94a3b8;
+        }
+
+        .dark .slash-cmd-item:hover .command-shortcut,
+        .dark .slash-cmd-item[data-selected="true"] .command-shortcut {
+          background: #312e81;
+          border-color: #4f46e5;
+          color: #a5b4fc;
+        }
+
+        .dark .empty-state {
+          color: #94a3b8;
+        }
+
+        .dark .empty-state svg {
+          color: #64748b;
+        }
+
+        .dark .slash-cmd-list::-webkit-scrollbar-thumb {
+          background-color: #334155;
+        }
+
+        .dark .slash-cmd-list::-webkit-scrollbar-thumb:hover {
+          background-color: #475569;
+        }
+
+        /* Focus styles for accessibility */
+        .slash-cmd-item:focus-visible {
+          outline: 2px solid #4f46e5;
+          outline-offset: 2px;
+        }
+
+        .dark .slash-cmd-item:focus-visible {
+          outline-color: #a5b4fc;
         }
       `}</style>
     </SlashCmd.Root>
   );
 }
 
-// Helper function to get command icons
 function getCommandIcon(title: string) {
   const icons: Record<string, JSX.Element> = {
-    text: (
-      <svg
-        width="16"
-        height="16"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      >
-        <path d="M4 7V4h16v3M9 20h6M12 4v16" />
-      </svg>
-    ),
     "Heading 1": (
       <svg
         width="16"
@@ -298,12 +326,9 @@ function getCommandIcon(title: string) {
         fill="none"
         stroke="currentColor"
         strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
       >
-        <path d="M6 12h12M6 4v16M18 4v16" />
-        <text x="20" y="16" fontSize="8" fill="currentColor">
-          1
+        <text x="2" y="18" fontSize="14" fontWeight="bold" fill="currentColor">
+          H1
         </text>
       </svg>
     ),
@@ -315,29 +340,9 @@ function getCommandIcon(title: string) {
         fill="none"
         stroke="currentColor"
         strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
       >
-        <path d="M6 12h12M6 4v16M18 4v16" />
-        <text x="20" y="16" fontSize="8" fill="currentColor">
-          2
-        </text>
-      </svg>
-    ),
-    "Heading 3": (
-      <svg
-        width="16"
-        height="16"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      >
-        <path d="M6 12h12M6 4v16M18 4v16" />
-        <text x="20" y="16" fontSize="8" fill="currentColor">
-          3
+        <text x="2" y="18" fontSize="14" fontWeight="bold" fill="currentColor">
+          H2
         </text>
       </svg>
     ),
@@ -349,15 +354,13 @@ function getCommandIcon(title: string) {
         fill="none"
         stroke="currentColor"
         strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
       >
-        <line x1="8" y1="6" x2="21" y2="6" />
-        <line x1="8" y1="12" x2="21" y2="12" />
-        <line x1="8" y1="18" x2="21" y2="18" />
-        <line x1="3" y1="6" x2="3.01" y2="6" />
-        <line x1="3" y1="12" x2="3.01" y2="12" />
-        <line x1="3" y1="18" x2="3.01" y2="18" />
+        <circle cx="5" cy="7" r="1.5" />
+        <circle cx="5" cy="12" r="1.5" />
+        <circle cx="5" cy="17" r="1.5" />
+        <line x1="9" y1="7" x2="19" y2="7" />
+        <line x1="9" y1="12" x2="19" y2="12" />
+        <line x1="9" y1="17" x2="19" y2="17" />
       </svg>
     ),
     "Ordered List": (
@@ -368,30 +371,13 @@ function getCommandIcon(title: string) {
         fill="none"
         stroke="currentColor"
         strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
       >
-        <line x1="10" y1="6" x2="21" y2="6" />
-        <line x1="10" y1="12" x2="21" y2="12" />
-        <line x1="10" y1="18" x2="21" y2="18" />
         <path d="M4 6h1v4" />
         <path d="M4 10h2" />
         <path d="M6 18H4c0-1 2-2 2-3s-1-1.5-2-1" />
-      </svg>
-    ),
-    Blockquote: (
-      <svg
-        width="16"
-        height="16"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      >
-        <path d="M3 21c3 0 7-1 7-8V5c0-1.25-.756-2.017-2-2H4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2 1 0 1 0 1 1v1c0 1-1 2-2 2s-1 .008-1 1.031V20c0 1 0 1 1 1z" />
-        <path d="M15 21c3 0 7-1 7-8V5c0-1.25-.757-2.017-2-2h-4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2h.75c0 2.25.25 4-2.75 4v3c0 1 0 1 1 1z" />
+        <line x1="10" y1="6" x2="19" y2="6" />
+        <line x1="10" y1="12" x2="19" y2="12" />
+        <line x1="10" y1="18" x2="19" y2="18" />
       </svg>
     ),
     "Code Block": (
@@ -402,25 +388,9 @@ function getCommandIcon(title: string) {
         fill="none"
         stroke="currentColor"
         strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
       >
-        <polyline points="16,18 22,12 16,6" />
-        <polyline points="8,6 2,12 8,18" />
-      </svg>
-    ),
-    "Horizontal Rule": (
-      <svg
-        width="16"
-        height="16"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      >
-        <line x1="3" y1="12" x2="21" y2="12" />
+        <rect x="4" y="4" width="16" height="16" rx="2" />
+        <path d="M8 8l4 4-4 4m8 0l-4-4 4-4" />
       </svg>
     ),
     Link: (
@@ -431,26 +401,9 @@ function getCommandIcon(title: string) {
         fill="none"
         stroke="currentColor"
         strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
       >
         <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
         <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
-      </svg>
-    ),
-    "Task List": (
-      <svg
-        width="16"
-        height="16"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      >
-        <path d="M9 11l3 3l8-8" />
-        <path d="M21 12c0 4.97-4.03 9-9 9s-9-4.03-9-9s4.03-9 9-9c2.12 0 4.07.74 5.61 1.98" />
       </svg>
     ),
     "Bold Text": (
@@ -461,8 +414,6 @@ function getCommandIcon(title: string) {
         fill="none"
         stroke="currentColor"
         strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
       >
         <path d="M6 4h8a4 4 0 0 1 4 4 4 4 0 0 1-4 4H6z" />
         <path d="M6 12h9a4 4 0 0 1 4 4 4 4 0 0 1-4 4H6z" />
@@ -476,43 +427,10 @@ function getCommandIcon(title: string) {
         fill="none"
         stroke="currentColor"
         strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
       >
         <line x1="19" y1="4" x2="10" y2="4" />
         <line x1="14" y1="20" x2="5" y2="20" />
         <line x1="15" y1="4" x2="9" y2="20" />
-      </svg>
-    ),
-    "Inline Code": (
-      <svg
-        width="16"
-        height="16"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      >
-        <polyline points="16,18 22,12 16,6" />
-        <polyline points="8,6 2,12 8,18" />
-      </svg>
-    ),
-    Strikethrough: (
-      <svg
-        width="16"
-        height="16"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      >
-        <path d="M16 4H9a3 3 0 0 0-2.83 4" />
-        <path d="M14 12a4 4 0 0 1 0 8H6" />
-        <line x1="4" y1="12" x2="20" y2="12" />
       </svg>
     ),
   };
@@ -526,8 +444,6 @@ function getCommandIcon(title: string) {
         fill="none"
         stroke="currentColor"
         strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
       >
         <circle cx="12" cy="12" r="10" />
         <line x1="12" y1="8" x2="12" y2="12" />
@@ -537,39 +453,27 @@ function getCommandIcon(title: string) {
   );
 }
 
-// Helper function to get command descriptions
 function getCommandDescription(title: string) {
   const descriptions: Record<string, string> = {
-    text: "Insert plain text paragraph",
     "Heading 1": "Large section heading",
     "Heading 2": "Medium section heading",
-    "Heading 3": "Small section heading",
     "Bullet List": "Create bulleted list",
     "Ordered List": "Create numbered list",
-    Blockquote: "Insert quote block",
     "Code Block": "Insert code snippet",
-    "Horizontal Rule": "Add divider line",
     Link: "Insert hyperlink",
-    "Task List": "Create checklist",
     "Bold Text": "Make text bold",
     "Italic Text": "Make text italic",
-    "Inline Code": "Inline code format",
-    Strikethrough: "Cross out text",
   };
 
   return descriptions[title] || "Format text";
 }
 
-// Helper function to get command shortcuts
 function getCommandShortcut(title: string) {
   const shortcuts: Record<string, string> = {
-    text: "⌘T",
     "Heading 1": "⌘1",
     "Heading 2": "⌘2",
-    "Heading 3": "⌘3",
     "Bullet List": "⌘L",
     "Ordered List": "⌘O",
-    Blockquote: "⌘Q",
     "Code Block": "⌘C",
     Link: "⌘K",
     "Bold Text": "⌘B",
