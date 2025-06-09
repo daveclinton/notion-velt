@@ -6,7 +6,11 @@ import { useEditor, EditorContent, JSONContent } from "@tiptap/react";
 import { useState, useEffect, useTransition, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { useDebouncedCallback } from "use-debounce";
-import { useSetDocument, useCommentAnnotations } from "@veltdev/react";
+import {
+  useSetDocument,
+  useCommentAnnotations,
+  VeltCommentsSidebar,
+} from "@veltdev/react";
 import { highlightComments } from "@veltdev/tiptap-velt-comments";
 import Skeleton from "./components/Skeleton";
 import TextMenu from "./BubbleMenu/TextMenu";
@@ -142,6 +146,7 @@ export default function Editor({
           </div>
         )}
       </div>
+      <VeltCommentsSidebar position="left" />
     </SlashCmdProvider>
   );
 }
