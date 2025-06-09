@@ -6,7 +6,6 @@ import {
   Bell,
   ChevronDown,
   MessageSquare,
-  Send,
   Star,
   MoreHorizontal,
   MessageSquareText,
@@ -24,13 +23,6 @@ import { Button } from "./ui/button";
 import { useTheme } from "next-themes";
 import { VeltPresence } from "@veltdev/react";
 
-interface Comment {
-  id: number;
-  text: string;
-  user: string;
-  timestamp: Date;
-}
-
 interface CommentSidebarProps {
   documentId: string;
 }
@@ -39,29 +31,10 @@ export const CommentSidebar: FC<CommentSidebarProps> = ({ documentId }) => {
   const { setTheme } = useTheme();
 
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const [notifications, setNotifications] = useState<
-    "all" | "mentions" | "none"
-  >("all");
-  const [commentText, setCommentText] = useState<string>("");
-  const [comments, setComments] = useState<Comment[]>([]);
-  const sidebarRef = useRef<HTMLDivElement | null>(null);
+  const [notifications] = useState<"all" | "mentions" | "none">("all");
+  console.log(documentId);
 
-  const handleAddComment = (): void => {
-    if (commentText.trim()) {
-      setComments([
-        ...comments,
-        {
-          id: Date.now(),
-          text: commentText,
-          user: "You",
-          timestamp: new Date(),
-        },
-      ]);
-      setCommentText("");
-      setNotifications("all");
-      console.log(documentId);
-    }
-  };
+  const sidebarRef = useRef<HTMLDivElement | null>(null);
 
   const toggleSidebar = (): void => {
     setIsOpen((prev) => !prev);
@@ -74,29 +47,29 @@ export const CommentSidebar: FC<CommentSidebarProps> = ({ documentId }) => {
         onClick={toggleSidebar}
         role="button"
       >
-        <ChevronsLeft className="h-6 w-6" />
+        <ChevronsLeft className="h-5 w-5 text-gray-600 dark:text-gray-300" />
       </div>
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-3">
         <VeltPresence />
-        <button className="flex items-center gap-2 hover:bg-[color:var(--color-sidebar-accent)] px-2 py-1 rounded cursor-pointer">
+        <button className="flex items-center gap-2 px-3 py-1.5 text-sm font-medium rounded-md bg-blue-50 hover:bg-blue-100 dark:bg-blue-900/20 dark:hover:bg-blue-900/30 text-blue-700 dark:text-blue-300 transition-colors">
           <span>Share</span>
         </button>
       </div>
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-2">
         <button
           onClick={toggleSidebar}
-          className="p-1 hover:bg-[color:var(--color-sidebar-accent)] cursor-pointer rounded"
+          className="p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-600 dark:text-gray-300 transition-colors"
         >
-          <MessageSquareText size={20} />
+          <MessageSquareText size={18} />
         </button>
-        <button className="p-1 hover:bg-[color:var(--color-sidebar-accent)] cursor-pointer rounded">
-          <Star size={20} />
+        <button className="p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-600 dark:text-gray-300 transition-colors">
+          <Star size={18} />
         </button>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" size="icon">
-              <Sun className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
-              <Moon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+            <Button variant="outline" size="sm" className="h-8 w-8 p-0">
+              <Sun className="h-4 w-4 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+              <Moon className="absolute h-4 w-4 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
               <span className="sr-only">Toggle theme</span>
             </Button>
           </DropdownMenuTrigger>
@@ -118,6 +91,7 @@ export const CommentSidebar: FC<CommentSidebarProps> = ({ documentId }) => {
 
   return (
     <>
+      {/* Floating Header */}
       <div
         className={cn(
           "fixed top-0 right-0 p-4 text-[color:var(--color-sidebar-foreground)] z-30 transition-all duration-300",
@@ -127,112 +101,80 @@ export const CommentSidebar: FC<CommentSidebarProps> = ({ documentId }) => {
         <HeaderContent />
       </div>
 
+      {/* Sidebar */}
       <div
         ref={sidebarRef}
         className={cn(
-          "fixed right-0 top-0 h-screen w-80 bg-[color:var(--color-sidebar)] text-[color:var(--color-sidebar-foreground)] border-l border-[color:var(--color-sidebar-border)] flex flex-col z-50 transition-all duration-300",
+          "fixed right-0 top-0 h-screen w-80 bg-white dark:bg-black border-l border-gray-200 dark:border-gray-700 flex flex-col z-50 transition-all duration-300 shadow-xl",
           !isOpen && "translate-x-full"
         )}
       >
-        <div className="flex items-center justify-between p-4 border-b border-[color:var(--color-sidebar-border)]">
+        {/* Header */}
+        <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50">
           <HeaderContent />
         </div>
 
-        <div className="flex items-center justify-between p-4 border-b border-[color:var(--color-sidebar-border)]">
-          <h2 className="font-medium">Comments & suggestions</h2>
-          <button className="p-1 hover:bg-[color:var(--color-sidebar-accent)] rounded">
-            <MoreHorizontal size={20} />
+        {/* Comments & Suggestions Title */}
+        <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700">
+          <h2 className="font-semibold text-black dark:text-gray-100">
+            Comments & suggestions
+          </h2>
+          <button className="p-1.5 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-500 dark:text-gray-400 transition-colors">
+            <MoreHorizontal size={18} />
           </button>
         </div>
 
-        <div className="p-4 border-b border-[color:var(--color-sidebar-border)]">
-          <p className="text-sm text-[color:var(--color-sidebar-muted-foreground)] mb-2">
+        {/* Notification Settings */}
+        <div className="p-4 border-b border-gray-200 dark:border-gray-700 bg-gray-50/50 dark:bg-gray-800/25">
+          <p className="text-sm text-gray-600 dark:text-gray-400 mb-3 font-medium">
             Notify me for
           </p>
-          <button className="w-full flex items-center justify-between p-2 bg-[color:var(--color-sidebar-accent)] rounded hover:bg-[color:var(--color-sidebar-border)]">
-            <div className="flex items-center gap-2">
-              <Bell size={18} />
-              <span>
+          <button className="w-full flex items-center justify-between p-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors shadow-sm">
+            <div className="flex items-center gap-3">
+              <Bell size={16} className="text-gray-600 dark:text-gray-400" />
+              <span className="text-sm font-medium text-black dark:text-gray-100">
                 {notifications === "all" && "All comments"}
                 {notifications === "mentions" && "Mentions only"}
                 {notifications === "none" && "No notifications"}
               </span>
             </div>
-            <ChevronDown size={18} />
+            <ChevronDown
+              size={16}
+              className="text-gray-500 dark:text-gray-400"
+            />
           </button>
         </div>
 
+        {/* Comments List */}
         <div className="flex-1 overflow-y-auto p-4">
-          {comments.length === 0 ? (
-            <div className="h-full flex flex-col items-center justify-center text-[color:var(--color-sidebar-muted-foreground)]">
-              <div className="mb-4 p-3 border-2 border-[color:var(--color-sidebar-border)] rounded-lg">
-                <MessageSquare size={32} />
+          {/* Replace the local comments state with Velt Comments component */}
+          <div className="h-full">
+            {/* This will be replaced by VeltComments component in your app */}
+            <div className="text-center text-gray-500 dark:text-gray-400">
+              <div className="mb-6 p-4 bg-gray-100 dark:bg-gray-800 rounded-full mx-auto w-fit">
+                <MessageSquare
+                  size={32}
+                  className="text-gray-400 dark:text-gray-500"
+                />
               </div>
-              <p className="text-center mb-6">
-                No open comments or suggestions
+              <h3 className="text-lg font-medium text-black dark:text-gray-100 mb-2">
+                Comments will appear here
+              </h3>
+              <p className="text-gray-600 dark:text-gray-400 mb-6 max-w-xs mx-auto">
+                Select text in the editor and click &quot;Comment&quot; to start
+                a conversation
               </p>
-              <button
-                className="px-4 py-2 border border-[color:var(--color-sidebar-border)] rounded-md hover:bg-[color:var(--color-sidebar-accent)]"
-                onClick={() =>
-                  document.getElementById("comment-input")?.focus()
-                }
-              >
-                Add comment
-              </button>
             </div>
-          ) : (
-            <div className="space-y-4">
-              {comments.map((comment: Comment) => (
-                <div
-                  key={comment.id}
-                  className="bg-[color:var(--color-sidebar-accent)] p-3 rounded-lg"
-                >
-                  <div className="flex items-center gap-2 mb-1">
-                    <span className="font-medium">{comment.user}</span>
-                    <span className="text-xs text-[color:var(--color-sidebar-muted-foreground)]">
-                      {comment.timestamp.toLocaleTimeString([], {
-                        hour: "2-digit",
-                        minute: "2-digit",
-                      })}
-                    </span>
-                  </div>
-                  <p>{comment.text}</p>
-                </div>
-              ))}
-            </div>
-          )}
+          </div>
         </div>
 
-        <div className="p-4 border-t border-[color:var(--color-sidebar-border)]">
-          <div className="bg-[color:var(--color-sidebar-accent)] rounded-lg flex items-center p-2">
-            <input
-              id="comment-input"
-              type="text"
-              placeholder="Add a comment..."
-              className="flex-1 bg-transparent outline-none text-sm"
-              value={commentText}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                setCommentText(e.target.value)
-              }
-              onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
-                if (e.key === "Enter" && !e.shiftKey) {
-                  e.preventDefault();
-                  handleAddComment();
-                }
-              }}
-            />
-            <button
-              className={cn(
-                "p-1 rounded-full",
-                commentText.trim()
-                  ? "text-[color:var(--color-sidebar-primary)] hover:bg-[color:var(--color-sidebar-border)]"
-                  : "text-[color:var(--color-sidebar-muted-foreground)]"
-              )}
-              disabled={!commentText.trim()}
-              onClick={handleAddComment}
-            >
-              <Send size={18} />
-            </button>
+        {/* Comment Input - Remove this since Velt handles comment input */}
+        <div className="p-4 border-t border-gray-200 dark:border-gray-700 bg-gray-50/50 dark:bg-gray-800/25">
+          <div className="text-center text-sm text-gray-500 dark:text-gray-400">
+            <p>
+              Use the &quot;Comment&quot; button in the editor toolbar to add
+              comments to selected text
+            </p>
           </div>
         </div>
       </div>

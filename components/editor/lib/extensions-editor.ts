@@ -8,9 +8,11 @@ import Placeholder from "@tiptap/extension-placeholder";
 import { TiptapExtensions } from "./extensions";
 import { Slash } from "@harshtalks/slash-tiptap";
 import { suggestions } from "../custom-extensions/suggestions-items";
+import { TiptapVeltComments } from "@veltdev/tiptap-velt-comments";
 
 export const TipTapEditorExtensions = [
   ...TiptapExtensions,
+  TiptapVeltComments,
   History.configure({
     depth: 20,
   }),

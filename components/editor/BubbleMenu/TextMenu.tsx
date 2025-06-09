@@ -2,6 +2,7 @@
 
 import React, { useRef } from "react";
 import { BubbleMenu, Editor } from "@tiptap/react";
+import { MessageSquarePlus } from "lucide-react";
 import DropdownStyle from "../components/DropdownStyle";
 import DropdownNode from "../components/DropdownNode";
 import Marks from "../components/Marks";
@@ -9,11 +10,27 @@ import { TextSelection } from "prosemirror-state";
 import "tippy.js/animations/scale-subtle.css";
 import { NodeTypeEnum } from "../lib/data";
 import DropdownLinkInput from "../components/DropdownLinkInput";
+import {
+  triggerAddComment,
+  TiptapVeltCommentConfig,
+} from "@veltdev/tiptap-velt-comments";
+
+import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
 
 const MenuBar = ({ editor }: { editor: Editor | null }) => {
   const containerRef = useRef<HTMLDivElement>(null);
 
   if (!editor) return null;
+
+  const handleAddCommentClick = () => {
+    if (editor && editor.state.selection && !editor.state.selection.empty) {
+      const config: TiptapVeltCommentConfig = {};
+      triggerAddComment(editor, config);
+    }
+  };
+
+  const hasSelection = editor.state.selection && !editor.state.selection.empty;
 
   return (
     <React.Fragment>
@@ -59,15 +76,48 @@ const MenuBar = ({ editor }: { editor: Editor | null }) => {
       >
         <div ref={containerRef} className="cursor-auto z-10 w-fit relative">
           {containerRef.current && (
-            <div className="flex">
+            <div className="flex items-center">
               <DropdownNode container={containerRef.current} editor={editor} />
-              <div className="bg-accent w-[1px] shrink-0" />
+
+              <div className="bg-accent w-[1px] h-6 shrink-0" />
+
               <DropdownLinkInput
                 container={containerRef.current}
                 editor={editor}
               />
-              <div className="bg-accent w-[1px] shrink-0" />
+
+              <div className="bg-accent w-[1px] h-6 shrink-0" />
+
               <Marks editor={editor} />
+
+              <div className="bg-accent w-[1px] h-6 shrink-0" />
+
+              {/* Velt Comment Button */}
+              <div className="flex items-center px-1">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={handleAddCommentClick}
+                  disabled={!hasSelection}
+                  className={cn(
+                    "h-8 px-2 text-xs font-medium transition-all duration-200",
+                    hasSelection
+                      ? "text-foreground hover:bg-accent hover:text-accent-foreground"
+                      : "text-muted-foreground cursor-not-allowed opacity-50"
+                  )}
+                  title={
+                    hasSelection
+                      ? "Add comment to selection"
+                      : "Select text to add comment"
+                  }
+                >
+                  <MessageSquarePlus className="h-3.5 w-3.5 mr-1.5" />
+                  Comment
+                </Button>
+              </div>
+
+              <div className="bg-accent w-[1px] h-6 shrink-0" />
+
               <DropdownStyle container={containerRef.current} editor={editor} />
             </div>
           )}

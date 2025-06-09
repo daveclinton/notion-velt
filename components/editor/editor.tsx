@@ -6,7 +6,8 @@ import { useEditor, EditorContent, JSONContent } from "@tiptap/react";
 import { useState, useEffect, useTransition, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { useDebouncedCallback } from "use-debounce";
-import { useSetDocument } from "@veltdev/react";
+import { useSetDocument, useCommentAnnotations } from "@veltdev/react";
+import { highlightComments } from "@veltdev/tiptap-velt-comments";
 import Skeleton from "./components/Skeleton";
 import TextMenu from "./BubbleMenu/TextMenu";
 import { useSaving } from "@/store/use-saving";
@@ -39,7 +40,6 @@ export default function Editor({
   const { setIsSaving } = useSaving();
 
   // Initialize Velt document for collaboration
-  // Use organizationId if provided for cross-organization access
   const documentMetadata = organizationId
     ? {
         documentName: documentName || `Document ${id}`,
@@ -50,6 +50,9 @@ export default function Editor({
       };
 
   useSetDocument(id, documentMetadata);
+
+  // Fetch comment annotations for the current document
+  const annotations = useCommentAnnotations();
 
   const updateEditorJson = useCallback(
     async (editorJson: JSONContent) => {
@@ -85,6 +88,17 @@ export default function Editor({
     content,
   });
 
+  // Render comments in the editor when annotations are available
+  useEffect(() => {
+    if (editor && annotations && annotations.length > 0) {
+      try {
+        highlightComments(editor, annotations);
+      } catch (error) {
+        console.error("Error highlighting comments:", error);
+      }
+    }
+  }, [editor, annotations]);
+
   useEffect(() => {
     const handleCtrlS = (event: KeyboardEvent) => {
       if (event.ctrlKey && event.key === "s" && editor) {
@@ -102,7 +116,7 @@ export default function Editor({
     };
   }, [setIsSaving, updateEditorJson, editor]);
 
-  // Hydrate the editor with the content from the database.
+  // Hydrate the editor with the content from the database
   useEffect(() => {
     if (editor && !hydrated) {
       editor.commands.setContent(editorJson);
