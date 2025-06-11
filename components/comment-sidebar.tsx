@@ -8,7 +8,6 @@ import {
   MessageSquare,
   Star,
   MoreHorizontal,
-  MessageSquareText,
   ChevronsLeft,
   Sun,
   Moon,
@@ -21,7 +20,7 @@ import {
 } from "./ui/dropdown-menu";
 import { Button } from "./ui/button";
 import { useTheme } from "next-themes";
-import { VeltPresence } from "@veltdev/react";
+import { VeltPresence, VeltSidebarButton } from "@veltdev/react";
 
 interface CommentSidebarProps {
   documentId: string;
@@ -56,12 +55,9 @@ export const CommentSidebar: FC<CommentSidebarProps> = ({ documentId }) => {
         </button>
       </div>
       <div className="flex items-center gap-2">
-        <button
-          onClick={toggleSidebar}
-          className="p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-600 dark:text-gray-300 transition-colors"
-        >
-          <MessageSquareText size={18} />
-        </button>
+        <div className="toolbar flex">
+          <VeltSidebarButton />
+        </div>
         <button className="p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-600 dark:text-gray-300 transition-colors">
           <Star size={18} />
         </button>
